@@ -30,7 +30,7 @@ app.use('/api/user', userRoutes);
 app.use(express.static(path.join(__dirname, 'public'))); // Serve files from public folder
 
 // Fallback route for undefined paths to serve index.html
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
