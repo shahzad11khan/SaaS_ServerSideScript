@@ -113,7 +113,7 @@ exports.updateCompany = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const findCompany = await Company.findById(id)
-    if(!findCompany) return res.status(404).json({Message:"Company Is Exists"})
+    if(!findCompany) return res.status(404).json({Message:"Company Not Exists"})
 
     const existingCompany = await Company.findOne({
       $or: [
@@ -125,10 +125,10 @@ exports.updateCompany = async (req, res) => {
     });
     
     if (existingCompany) {
-      if (existingCompany.email === req.body.email) {
+      if (existingCompany.email === email) {
         return res.status(400).json({ error: 'Company with this email already exists' });
       }
-      if (existingCompany.registrationNumber === req.body.registrationNumber) {
+      if (existingCompany.registrationNumber === registrationNumber) {
         return res.status(400).json({ error: 'Company with this registration number already exists' });
       }
       if (existingCompany.businessLicense === businessLicense) {

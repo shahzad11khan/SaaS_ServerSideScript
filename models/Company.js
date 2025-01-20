@@ -7,6 +7,7 @@ const companySchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: true,
     },
     registrationNumber: {
       type: String,
@@ -50,6 +51,7 @@ const companySchema = new mongoose.Schema(
       required: true,
       lowercase: true,
       trim: true,
+      unique: true,
       match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address']
     },
     ownerPhoneNumber: {
@@ -74,7 +76,7 @@ const companySchema = new mongoose.Schema(
       required: true,
     },
     isActive: {
-      type: String,
+      type:Boolean,
       default: true,
     },
     companyLogo: {

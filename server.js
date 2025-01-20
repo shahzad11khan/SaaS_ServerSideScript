@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
 const companyRoutes = require('./routes/companyRoutes');
+const userRoutes = require('./routes/userRoutes');
+
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
@@ -22,6 +24,7 @@ connectDB();
 
 // API Routes
 app.use('/api/companies', companyRoutes);
+app.use('/api/user', userRoutes);
 
 // Serve static HTML for testing APIs (optional)
 app.use(express.static(path.join(__dirname, 'public'))); // Serve files from public folder
