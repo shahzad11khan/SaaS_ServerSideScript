@@ -3,102 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Testing</title>
+  <title>Server Status</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 font-sans p-6">
-
-    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
-        <h1 class="text-3xl font-semibold text-center text-indigo-600 mb-4">API Testing</h1>
-        <p class="text-center text-gray-600 mb-6">Use this page to test your API locally and live.</p>
-        <div class="mb-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-2">Available API Endpoints</h2>
-            <ul class="list-disc pl-6">
-              <li><strong>MiddlePint:</strong> /api/companies </li>
-            <ul class="list-disc pl-6">
-              <li><strong>POST:</strong> /uploaddata - Create a new company</li>
-              <li><strong>GET:</strong> / - Get all companies</li>
-              <li><strong>PUT:</strong> /update/:id - Update a specific company by ID</li>
-              <li><strong>DELETE:</strong> /delete/:id - Delete a specific company by ID</li>
-              <li><strong>GET:</strong> /getSpecificCompany/:id - Get a specific company by ID</li>
-            </ul>
-          </div>
-        <form id="apiForm" enctype="multipart/form-data">
-          <div class="mb-4 flex space-x-4">
-            <div class="flex-1">
-              <label for="endpoint" class="block text-lg font-medium text-gray-800">API Endpoint:</label>
-              <input type="text" id="endpoint" placeholder="Enter API endpoint (e.g., /api/companies)" class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-            </div>
-      
-            <div class="flex-1">
-              <label for="method" class="block text-lg font-medium text-gray-800">HTTP Method:</label>
-              <select id="method" class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <option value="GET">GET</option>
-                <option value="POST">POST</option>
-                <option value="PUT">PUT</option>
-                <option value="DELETE">DELETE</option>
-              </select>
-            </div>
-          </div>
-      
-          <div class="mb-4">
-            <label for="body" class="block text-lg font-medium text-gray-800">Request Body (JSON):</label>
-            <textarea id="body" placeholder='{"key":"value"}' class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-          </div>
-      
-          <!-- File Upload -->
-          <div class="mb-4">
-            <label for="file" class="block text-lg font-medium text-gray-800">Upload File:</label>
-            <input type="file" id="file" name="companyLogo" class="w-full mt-2 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-          </div>
-      
-          <button type="button" onclick="testAPI()" class="w-full py-3 px-4 bg-indigo-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">Send Request</button>
-        </form>
-      
-        <h2 class="text-2xl font-semibold text-gray-800 mt-8 mb-2">Response</h2>
-        <pre id="response" class="bg-gray-100 p-4 rounded-lg mt-4 text-sm whitespace-pre-wrap"></pre>
-      </div>
-      
-      <script>
-        const baseURL = 'http://localhost:5000'; // Set your base URL here
-        async function testAPI() {
-          const endpoint = document.getElementById('endpoint').value;
-          const fullURL = `${baseURL}${endpoint}`;
-          const method = document.getElementById('method').value;
-          const body = document.getElementById('body').value;
-          const fileInput = document.getElementById('file');
-          const formData = new FormData();
-      
-          // Add the body to FormData if method is not GET
-          if (method !== 'GET' && body) {
-            try {
-              const parsedBody = JSON.parse(body);
-              formData.append('body', JSON.stringify(parsedBody));  // Append the JSON body
-            } catch (e) {
-              alert('Invalid JSON input');
-              return;
-            }
-          }
-      
-          // Add file to FormData if available
-          if (fileInput.files.length > 0) {
-            formData.append('companyLogo', fileInput.files[0]);
-          }
-      
-          const options = {
-            method,
-            body: method === 'GET' ? null : formData, 
-          };
-          console.log(options)
-          try {
-            const response = await fetch(fullURL, options);
-            const data = await response.json();
-            document.getElementById('response').textContent = JSON.stringify(data, null, 2);
-          } catch (error) {
-            document.getElementById('response').textContent = `Error: ${error.message}`;
-          }
-        }
-      </script>
-
+<body class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="text-center bg-white p-8 rounded-lg shadow-md max-w-md">
+    <h1 class="text-4xl font-bold text-green-600 mb-4">Server Is Running</h1>
+    <p class="text-gray-700 text-lg">
+      The server is up and running smoothly. All systems are operational, and everything is working as expected.
+    </p>
+  </div>
 </body>
 </html>
