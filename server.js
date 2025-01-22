@@ -5,6 +5,8 @@ const companyRoutes = require('./routes/companyRoutes');
 const userRoutes = require('./routes/userRoutes');
 const permissionRoutes = require('./routes/permissionRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const deliveredRoutes = require('./routes/deliveredProRoutes');
+const receivePayRoutes = require('./routes/receivedPaymentRoutes');
 
 const path = require('path');
 const fileUpload = require('express-fileupload');
@@ -29,6 +31,8 @@ app.use('/api/companies', companyRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/permission', permissionRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api/delivered', deliveredRoutes);
+app.use('/api/receive', receivePayRoutes);
 
 // Serve static HTML for testing APIs (optional)
 app.use(express.static(path.join(__dirname, 'public'))); // Serve files from public folder
