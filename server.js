@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
+const productRoutes = require('./routes/productRoutes');
 const companyRoutes = require('./routes/companyRoutes');
 const userRoutes = require('./routes/userRoutes');
 const permissionRoutes = require('./routes/permissionRoutes');
@@ -22,11 +23,13 @@ app.use(fileUpload({
 // Middleware
 app.use(express.json());
 app.use(cors());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
 connectDB();
 
 // API Routes
+app.use('/api/products', productRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/permission', permissionRoutes);

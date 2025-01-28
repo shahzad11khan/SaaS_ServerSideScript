@@ -1,7 +1,6 @@
-// models/User.js
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto'); // For generating secure tokens
 
 const userSchema = new mongoose.Schema({
   fullName: {
@@ -41,12 +40,12 @@ const userSchema = new mongoose.Schema({
   },
   permission: {
     type: String,
-    default:''
+    default: '',
   },
   role: {
     type: String,
     enum: ['superadmin', 'admin', 'manager', 'user'], // Role enum
-    default:'user',
+    default: 'user',
     required: true,
   },
   userLogoUrl: {
@@ -63,10 +62,15 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: 'inactive',
   },
-});
+  refreshToken: {
+    type: String,
+    default: null,
+  },
+}, { timestamps: true });
 
+// Unique Indexes
 userSchema.index({ email: 1 }, { unique: true });
-userSchema.index({ username: 1 },{fullName:1});
+userSchema.index({ username: 1 }, { fullName: 1 });
 
 // Encrypt password before saving
 userSchema.pre('save', async function (next) {
@@ -80,6 +84,18 @@ userSchema.pre('save', async function (next) {
 // Compare password
 userSchema.methods.matchPassword = async function (password) {
   return await bcrypt.compare(password, this.password);
+};
+
+// Generate Refresh Token
+userSchema.methods.generateRefreshToken = function () {
+  const token = crypto.randomBytes(32).toString('hex'); // Generate a secure token
+  this.refreshToken = token;
+  return token;
+};
+
+// Clear Refresh Token
+userSchema.methods.clearRefreshToken = function () {
+  this.refreshToken = null;
 };
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,0 +1,29 @@
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const productController = require('../controllers/productController');
+
+// Define storage and file filter options
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/'); // Set the upload folder path
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname); // Generate a unique file name
+    }
+  });
+  
+  // Middleware to handle file uploads
+  const upload = multer({
+    storage: storage,
+  }).single('companyLogo'); // 'file' should match the field name used in the frontend
+  
+
+// Routes
+router.post('/addproduct', productController.createProduct);
+router.get('/', productController.getAllProducts);
+router.get('/:id', productController.getProductById);
+router.put('/update/:id', productController.updateProduct);
+router.delete('/delete/:id', productController.deleteProduct);
+
+module.exports = router;
