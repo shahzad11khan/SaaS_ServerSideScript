@@ -5,16 +5,15 @@ const crypto = require('crypto'); // For generating secure tokens
 const userSchema = new mongoose.Schema({
   fullName: {
     type: String,
-    required: true,
+    trim:true,
   },
   username: {
     type: String,
-    required: true,
     unique: true,
+    trim:true,
   },
   email: {
     type: String,
-    required: true,
     unique: true,
     lowercase: true,
     trim: true,
@@ -30,13 +29,6 @@ const userSchema = new mongoose.Schema({
   },
   dateOfBirth: {
     type: Date,
-    required: true,
-    validate: {
-      validator: function (value) {
-        return value <= new Date();
-      },
-      message: 'Date of birth cannot be in the future.',
-    },
   },
   permission: {
     type: String,
@@ -46,7 +38,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['superadmin', 'admin', 'manager', 'user'], // Role enum
     default: 'user',
-    required: true,
   },
   userLogoUrl: {
     type: String, 
@@ -59,7 +50,6 @@ const userSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['active', 'inactive'],
-    required: true,
     default: 'inactive',
   },
   refreshToken: {

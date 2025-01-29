@@ -5,6 +5,8 @@ const User = require('../models/User');
 // Signup Controller
 exports.signup = async (req, res) => {
   try {
+    // console.log(req.body)
+    // console.log(req.files.userLogo)
     const { fullName, username, email, password, confirmPassword, dateOfBirth, permission, role } = req.body;
     const file  = req.files.userLogo
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/;
@@ -27,6 +29,19 @@ exports.signup = async (req, res) => {
     if (new Date(dateOfBirth) > new Date()) {
         return res.status(400).json({ error: 'Date of birth cannot be in the future.' });
     }
+    if (!dateOfBirth || !/^\d{2}-\d{2}-\d{4}$/.test(dateOfBirth)) {
+      return res.status(400).json({ error: "Invalid date format. Use DD-MM-YYYY" });
+    }
+
+    // Convert 'DD-MM-YYYY' to 'YYYY-MM-DD'
+    const [day, month, year] = dateOfBirth.split("-");
+    const formattedDate = `${year}-${month}-${day}`;
+
+    const dob = new Date(formattedDate);
+
+    if (isNaN(dob.getTime())) {
+      return res.status(400).json({ error: "Invalid date provided" });
+    }
     if (file) {
         const result = await uploadImageToCloudinary(file.tempFilePath);
         userLogoUrl = result.url;
@@ -36,13 +51,15 @@ exports.signup = async (req, res) => {
         userLogoUrl = null;
     }
 
+
+
     const user = new User({
       fullName,
       username,
       email,
       password,
       confirmPassword,
-      dateOfBirth,
+      dateOfBirth : dob,
       permission,
       role,
       userLogoUrl,
@@ -52,6 +69,7 @@ exports.signup = async (req, res) => {
     await user.save();
     res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error: 'Error creating user' });
   }
 };
