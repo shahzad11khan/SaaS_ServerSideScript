@@ -59,7 +59,7 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Unique Indexes
-userSchema.index({ email: 1 }, { unique: true });
+userSchema.index({ email: 1 });
 userSchema.index({ username: 1 }, { fullName: 1 });
 
 // Encrypt password before saving

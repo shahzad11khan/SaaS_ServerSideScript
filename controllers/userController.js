@@ -158,6 +158,19 @@ exports.updateUser = async (req, res) => {
     if (new Date(dateOfBirth) > new Date()) {
         return res.status(400).json({ error: 'Date of birth cannot be in the future.' });
     }
+    if (!dateOfBirth || !/^\d{2}-\d{2}-\d{4}$/.test(dateOfBirth)) {
+      return res.status(400).json({ error: "Invalid date format. Use DD-MM-YYYY" });
+    }
+
+    // Convert 'DD-MM-YYYY' to 'YYYY-MM-DD'
+    const [day, month, year] = dateOfBirth.split("-");
+    const formattedDate = `${year}-${month}-${day}`;
+
+    const dob = new Date(formattedDate);
+
+    if (isNaN(dob.getTime())) {
+      return res.status(400).json({ error: "Invalid date provided" });
+    }
     if (file) {
         await deleteFromCloudinary(findUser.userLogoPublicId);
         const result = await uploadImageToCloudinary(file.tempFilePath);
@@ -174,7 +187,7 @@ exports.updateUser = async (req, res) => {
       email,
       password,
       confirmPassword,
-      dateOfBirth,
+      dateOfBirth:dob,
       permission,
       role,
       userLogoUrl,
