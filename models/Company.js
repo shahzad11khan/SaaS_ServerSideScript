@@ -92,9 +92,9 @@ const companySchema = new mongoose.Schema(
 );
 
 // Create indexes
-companySchema.index({ email: 1 }, { unique: true });
-companySchema.index({ registrationNumber: 1 }, { unique: true });
-companySchema.index({ businessLicense: 1 }, { unique: true })
+companySchema.index({ email: 1 });
+companySchema.index({ registrationNumber: 1 });
+companySchema.index({ businessLicense: 1 })
 
 // Create the Company model
 const Company = mongoose.model('Company', companySchema);

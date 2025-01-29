@@ -9,7 +9,6 @@ const userSchema = new mongoose.Schema({
   },
   username: {
     type: String,
-    unique: true,
     trim:true,
   },
   email: {
@@ -60,6 +59,7 @@ const userSchema = new mongoose.Schema({
 
 // Unique Indexes
 userSchema.index({ email: 1 });
+userSchema.index({ username: 1 }, { fullName: 1 });
 
 // Encrypt password before saving
 userSchema.pre('save', async function (next) {
