@@ -10,11 +10,14 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     trim:true,
+    index:true,
+    unique: true
   },
   email: {
     type: String,
     unique: true,
     lowercase: true,
+    index: true,
     trim: true,
     match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address']
   },
@@ -37,6 +40,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['superadmin', 'admin', 'manager', 'user'], // Role enum
     default: 'user',
+    index: true,
   },
   userLogoUrl: {
     type: String, 
@@ -57,9 +61,7 @@ const userSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-// Unique Indexes
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 }, { fullName: 1 });
+
 
 // Encrypt password before saving
 userSchema.pre('save', async function (next) {

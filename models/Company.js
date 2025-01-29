@@ -8,11 +8,13 @@ const companySchema = new mongoose.Schema(
       required: true,
       trim: true,
       unique: true,
+      index: true
     },
     registrationNumber: {
       type: String,
       required: true,
       unique: true,
+      index: true
     },
     email: {
       type: String,
@@ -20,6 +22,7 @@ const companySchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+      index: true,
       match: [/^\S+@\S+\.\S+$/, 'Please use a valid email address']
     },
     address: {
@@ -62,6 +65,7 @@ const companySchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      index: true
     },
     taxId: {
       type: String,
@@ -91,10 +95,7 @@ const companySchema = new mongoose.Schema(
   { timestamps: true } 
 );
 
-// Create indexes
-companySchema.index({ email: 1 });
-companySchema.index({ registrationNumber: 1 });
-companySchema.index({ businessLicense: 1 })
+
 
 // Create the Company model
 const Company = mongoose.model('Company', companySchema);
