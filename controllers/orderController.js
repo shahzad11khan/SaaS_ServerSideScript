@@ -1,4 +1,4 @@
-const Order = require('../models/Order');
+const Order = require('../models/Order.js');
 const Product = require('../models/Product');
 
 // Create a new order
