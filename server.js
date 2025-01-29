@@ -5,7 +5,6 @@ const productRoutes = require('./routes/productRoutes');
 const companyRoutes = require('./routes/companyRoutes');
 const userRoutes = require('./routes/userRoutes');
 const permissionRoutes = require('./routes/permissionRoutes');
-const orderRoutes = require('./routes/orderRoutes');
 const deliveredRoutes = require('./routes/deliveredProRoutes');
 const receivePayRoutes = require('./routes/receivedPaymentRoutes');
 
@@ -33,7 +32,6 @@ app.use('/api/products', productRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/permission', permissionRoutes);
-app.use('/api/order', orderRoutes);
 app.use('/api/delivered', deliveredRoutes);
 app.use('/api/receive', receivePayRoutes);
 
