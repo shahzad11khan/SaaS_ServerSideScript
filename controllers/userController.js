@@ -7,7 +7,7 @@ exports.signup = async (req, res) => {
   try {
     // console.log(req.body)
     // console.log(req.files.userLogo)
-    const { fullName, username, email, password, confirmPassword, dateOfBirth, permission, role } = req.body;
+    const { fullName, username, email, password, confirmPassword,status, dateOfBirth, permission, role } = req.body;
     const file  = req.files.userLogo
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/;
     let userLogoUrl = '';
@@ -61,6 +61,7 @@ exports.signup = async (req, res) => {
       confirmPassword,
       dateOfBirth : dob,
       permission,
+      status,
       role,
       userLogoUrl,
       userLogoPublicId
@@ -130,7 +131,7 @@ exports.getUserById = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
   const { id } = req.params;  
-  const { fullName, username, email, password, confirmPassword, dateOfBirth, permission, role } = req.body;
+  const { fullName, username, email, password, confirmPassword,status, dateOfBirth, permission, role } = req.body;
   const file  = req.files.userLogo
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/;
   let userLogoUrl = null;
@@ -189,6 +190,7 @@ exports.updateUser = async (req, res) => {
       confirmPassword,
       dateOfBirth:dob,
       permission,
+      status,
       role,
       userLogoUrl,
       userLogoPublicId

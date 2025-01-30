@@ -11,10 +11,12 @@ exports.login = async (req, res) => {
         return res.status(400).json({ error: 'Email and password are required' });
        }
     let user = await User.findOne({$and: [{ email: email }, { confirmPassword: password }]});
+    let isCompany=null;
     if (!user) {
-      user = await Company.findOne({$and: [{ email: email }, { confirmPassword: password }]});
+      isCompany = await Company.findOne({ email: email });
+      if(!isCompany) return res.status(400).json({ error: 'InCorrect Email' });
+      user = isCompany;
     }
-    if(user.email !== email) return res.status(400).json({ error: 'InCorrect Email' });
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid)  return res.status(400).json({ error: 'InCorrect password' });
     if(user.status === 'inactive') return res.status(400).json({error:'User Is InActive'})
