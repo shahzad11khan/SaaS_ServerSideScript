@@ -4,6 +4,7 @@ const express = require('express');
 const { signup, getUsers, getUserById, updateUser, deleteUser } = require('../controllers/userController');
 const { login } = require('../controllers/authController');
 const { generateResetToken,resetPassword } = require('../controllers/resetpasswordauthController');
+const {authMiddleware} = require('../middlewares/authMiddleware')
 const router = express.Router();
 
 // Login 
@@ -14,7 +15,7 @@ router.post('/signup', signup);
 router.get('/users', getUsers);
 router.get('/user/:id', getUserById);
 router.put('/user/:id', updateUser);
-router.delete('/user/:id', deleteUser);
+router.delete('/user/:id',authMiddleware(["superadmin"],["admin"],["manager"]), deleteUser);
 // rest password
 router.post('/forget-password', generateResetToken);
 router.post('/reset-password', resetPassword);

@@ -1,19 +1,71 @@
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
-const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization')?.replace('Bearer ', '');
+// const authMiddleware = (req, res, next) => {
+//   const token = req.header('Authorization')?.replace('Bearer ', '');
 
-  if (!token) {
-    return res.status(401).json({ message: 'Access Denied: No token provided' });
-  }
+//   if (!token) {
+//     return res.status(401).json({ message: 'Access Denied: No token provided' });
+//   }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Add the decoded token payload to the request object
-    next();
-  } catch (error) {
-    res.status(401).json({ message: 'Access Denied: Invalid token' });
-  }
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     req.user = decoded; // Add the decoded token payload to the request object
+//     next();
+//   } catch (error) {
+//     res.status(401).json({ message: 'Access Denied: Invalid token' });
+//   }
+// };
+
+// module.exports = authMiddleware;
+
+import jwt from "jsonwebtoken";
+import UserModel from "../models/User.js"; 
+
+// Middleware to verify token and authorize access
+export const authMiddleware = (allowedRoles = [], allowedPermissions = []) => {
+  return async (req, res, next) => {
+    try {
+      // Get token from headers
+      const token = req.header("Authorization")?.split(" ")[1]; // Format: "Bearer <token>"
+
+      if (!token) {
+        return res.status(401).json({ message: "Access Denied. No token provided." });
+      }
+
+      // Verify token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = decoded; // Attach user details to request object
+
+      // Fetch user from database to check role & permissions
+      const user = await UserModel.findById(decoded.userId);
+      if (!user) {
+        return res.status(401).json({ message: "User not found." });
+      }
+
+      // Check if user role is allowed
+      if (allowedRoles.length && !allowedRoles.includes(user.role)) {
+        return res.status(403).json({ message: "Forbidden: Insufficient role privileges." });
+      }
+
+      // Check if user has required permissions
+      if (allowedPermissions.length) {
+        const hasPermission = allowedPermissions.every((perm) => user.permission.includes(perm));
+        if (!hasPermission) {
+          return res.status(403).json({ message: "Forbidden: Insufficient permissions." });
+        }
+      }
+
+      // Attach user details to request for further use
+      req.user = {
+        id: user._id,
+        username: user.username,
+        role: user.role,
+        permissions: user.permission,
+      };
+
+      next(); // Proceed to next middleware or route handler
+    } catch (error) {
+      return res.status(401).json({ message: "Invalid or expired token.", error: error.message });
+    }
+  };
 };
-
-module.exports = authMiddleware;
