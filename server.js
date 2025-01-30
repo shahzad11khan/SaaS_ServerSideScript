@@ -7,15 +7,19 @@ const userRoutes = require('./routes/userRoutes');
 const permissionRoutes = require('./routes/permissionRoutes');
 const deliveredRoutes = require('./routes/deliveredProRoutes');
 const receivePayRoutes = require('./routes/receivedPaymentRoutes');
-
+const fs = require('fs');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
 
 const app = express();
-
+const tempDir = "/tmp/";
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir, { recursive: true });
+}
 app.use(fileUpload({
   useTempFiles : true,
+  tempFileDir: tempDir,
   limits: { fileSize: 50 * 1024 * 1024 },
 }));
 
