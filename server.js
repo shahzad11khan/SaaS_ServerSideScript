@@ -34,6 +34,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/permission', permissionRoutes);
 app.use('/api/delivered', deliveredRoutes);
 app.use('/api/receive', receivePayRoutes);
+// server.js
 
 // Serve static HTML for testing APIs (optional)
 app.use(express.static(path.join(__dirname, 'public'))); // Serve files from public folder
