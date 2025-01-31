@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const roleSchema = new mongoose.Schema(
   {
+      userId: {
+        type: mongoose.Schema.Types.ObjectId, // Corrected type
+        ref: 'User', // Reference to the User model (optional)
+        required: true,
+      },
     parentPermission: { type: String, required: true }, // Parent permission name
     permissions: {
       productManager: { type: Object, default: {} },

@@ -7,7 +7,7 @@ const uploadImageToCloudinary = async (buffer) => {
       resource_type: "auto", 
     });
 
-    // console.log('Image uploaded successfully:', result); 
+    console.log('Image uploaded successfully:', result); 
     return result; 
   } catch (error) {
     console.error('Error uploading image to Cloudinary:', error);

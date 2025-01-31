@@ -1,4 +1,6 @@
 const Product = require('../models/Product');
+const uploadImageToCloudinary = require('../middlewares/cloudinary');
+const { deleteFromCloudinary } = require('../middlewares/deleteFromCloudinary');
 
 // Create a new product
 exports.createProduct = async (req, res) => {
@@ -7,15 +9,23 @@ exports.createProduct = async (req, res) => {
     const productImage = req.files.productImage;
     let productImageUrl = '';
     let productImagePublicId = '';
-    if (file) {
-      const result = await uploadImageToCloudinary(file.tempFilePath);
+    if (productImage) {
+      const result = await uploadImageToCloudinary(productImage.tempFilePath);
       productImageUrl = result.url;
       productImagePublicId = result.public_id;
     } else {
       productImageUrl = null;
       productImagePublicId = null;
     }
+    // console.log(req.user)
+    // return;
+    const userId = req.user.id;
+    const userName = req.user.username;
+    const role = req.user.role;
     const newProduct = new Product({
+      userId,
+      userName,
+      role,
       productName,
       productDescription,
       productPrice,
@@ -29,6 +39,7 @@ exports.createProduct = async (req, res) => {
     const savedProduct = await newProduct.save();
     res.status(201).json(savedProduct);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: 'Error creating product', error });
   }
 };
@@ -59,8 +70,11 @@ exports.updateProduct = async (req, res) => {
   try {
     const { productName, productDescription, productPrice, productQuantity, productCategory } = req.body;
     const productImage = req.files.productImage;
-    let productImageUrl = null;
-    let productImagePublicId = null;
+    let updatedproductImageUrl = null;
+    let updatedproductImagePublicId = null;
+    const userId = req.user.id;
+    const userName = req.user.username;
+    const role = req.user.role;
     const findProduct = await Product.findById(id)
     if (file) {
       await deleteFromCloudinary(findProduct.productImagePublicId);
@@ -69,12 +83,12 @@ exports.updateProduct = async (req, res) => {
       updatedproductImagePublicId = result.public_id;
     
     }else{
-      updatedproductImageUrl = findProduct.updatedproductImageUrl;
+      updatedproductImageUrl = findProduct.productImageUrl;
       updatedproductImagePublicId = findProduct.productImagePublicId;
     }
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      { productName, productDescription, productPrice, productQuantity, productCategory, productImage, productImageUrl: updatedproductImageUrl , 
+      { productName,userId,userName,role, productDescription, productPrice, productQuantity, productCategory, productImage, productImageUrl: updatedproductImageUrl , 
         productImagePublicId: updatedproductImagePublicId ,  },
       { new: true }
     );

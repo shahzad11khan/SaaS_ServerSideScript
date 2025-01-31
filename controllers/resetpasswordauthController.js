@@ -25,16 +25,23 @@ exports.generateResetToken = async (req, res) => {
       const resetToken = user.generateRefreshToken();
       await user.save();
   
-      // Construct the password reset URL
-      const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+      // Construct the password reset UR
+      let resetURL;
+      if (role === "superadmin"||role === "admin" ||role === "manager") {
+        resetURL = `${process.env.CLIENT_URL_ADMIN}/reset-password/${resetToken}`;
+      } else if (role === "user") {
+        resetURL = `${process.env.CLIENT_URL_USER}/reset-password/${resetToken}`;
+      } else {
+        resetURL = `${process.env.CLIENT_URL_MOBILE}/reset-password/${resetToken}`; // For Flutter deep linking
+      }
   
       // Send the email
       const mailOptions = {
         from: process.env.EMAIL_USER, // Sender email
         to: email, // Recipient email
         subject: 'Password Reset Request',
-        text: `You requested a password reset. Please click the link below to reset your password:\n\n${resetUrl}`,
-        html: `<p>You requested a password reset. Please click the link below to reset your password:</p><a href="${resetUrl}" target="_blank">${resetUrl}</a>`,
+        text: `You requested a password reset. Please click the link below to reset your password:\n\n${resetURL}`,
+        html: `<p>You requested a password reset. Please click the link below to reset your password:</p><a href="${resetURL}" target="_blank">${resetURL}</a>`,
       };
   
       await transporter.sendMail(mailOptions);

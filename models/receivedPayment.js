@@ -10,11 +10,11 @@ const ReceivedPaymentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-//   receivedFrom: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'Person', 
-//     required: true,
-//   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId, // Corrected type
+    ref: 'User', // Reference to the User model (optional)
+    required: true,
+  },
   paymentMethod: {
     type: String,
     enum: ['Cash', 'Card', 'Bank Transfer', 'Online Payment'],

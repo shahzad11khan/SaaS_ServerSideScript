@@ -10,11 +10,11 @@ const DeliveredProductSchema = new mongoose.Schema({
     required: true,
     min: 1,
   },
-//   deliveredTo: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'Person', // Reference to Person model
-//     required: true,
-//   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId, // Corrected type
+    ref: 'User', // Reference to the User model (optional)
+    required: true,
+  },
   deliveryDate: {
     type: Date,
     default: Date.now,

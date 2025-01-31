@@ -47,9 +47,8 @@ export const authMiddleware = (allowedRoles = [], allowedPermissions = []) => {
         return res.status(403).json({ message: "Forbidden: Insufficient role privileges." });
       }
 
-      // Check if user has required permissions
-      if (allowedPermissions.length) {
-        const hasPermission = allowedPermissions.every((perm) => user.permission.includes(perm));
+      if (user.role === 'user' && allowedPermissions.length) {
+        const hasPermission = allowedPermissions.every((perm) => user.permissions.includes(perm));
         if (!hasPermission) {
           return res.status(403).json({ message: "Forbidden: Insufficient permissions." });
         }

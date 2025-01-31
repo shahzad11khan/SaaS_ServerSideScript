@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const productController = require('../controllers/productController');
+const {authMiddleware} = require('../middlewares/authMiddleware')
+
 
 // Define storage and file filter options
 const storage = multer.diskStorage({
@@ -20,10 +22,10 @@ const storage = multer.diskStorage({
   
 
 // Routes
-router.post('/addproduct', productController.createProduct);
+router.post('/addproduct',authMiddleware(["superadmin"],["admin"],["manager"]), productController.createProduct);
 router.get('/', productController.getAllProducts);
-router.get('/:id', productController.getProductById);
-router.put('/update/:id', productController.updateProduct);
-router.delete('/delete/:id', productController.deleteProduct);
+router.get('/:id',authMiddleware(["superadmin"],["admin"],["manager"]), productController.getProductById);
+router.put('/update/:id',authMiddleware(["superadmin"],["admin"],["manager"]), productController.updateProduct);
+router.delete('/delete/:id',authMiddleware(["superadmin"],["admin"],["manager"]), productController.deleteProduct);
 
 module.exports = router;
