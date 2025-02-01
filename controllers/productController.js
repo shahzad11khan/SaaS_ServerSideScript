@@ -5,7 +5,7 @@ const { deleteFromCloudinary } = require('../middlewares/deleteFromCloudinary');
 // Create a new product
 exports.createProduct = async (req, res) => {
   try {
-    const { productName, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating } = req.body;
+    const { productName, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating,barcode } = req.body;
     const productImage = req.files.productImage;
     let productImageUrl = '';
     let productImagePublicId = '';
@@ -34,7 +34,7 @@ exports.createProduct = async (req, res) => {
       productSubCategory, productTag, rating,
       productImage,
       productImageUrl,
-      productImagePublicId
+      productImagePublicId,barcode
     });
 
     const savedProduct = await newProduct.save();
@@ -91,7 +91,7 @@ exports.updateProduct = async (req, res) => {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       {
-        productName, userId, userName, role, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating, productImage, productImageUrl: updatedproductImageUrl,
+        productName, userId, userName, role, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating,barcode, productImageUrl: updatedproductImageUrl,
         productImagePublicId: updatedproductImagePublicId
       },
       { new: true }

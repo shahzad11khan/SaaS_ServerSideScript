@@ -42,6 +42,11 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
     default: 'pending',
   },
+  barcode: {
+    type: String,
+    unique: true, 
+    default:null
+  },
 }, {
   timestamps: true, // Adds createdAt and updatedAt
 });
