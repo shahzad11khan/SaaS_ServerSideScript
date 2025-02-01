@@ -27,6 +27,18 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  productSubCategory: {
+    type: String,
+    required: true,
+  },
+  productTag: {
+    type: String,
+    required: false,
+  },
+  rating: {
+    type: Number,
+    required: true,
+  },
   productImageUrl: {
     type: String, 
     default: null,

@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const permissionRoutes = require('./routes/permissionRoutes');
 const deliveredRoutes = require('./routes/deliveredProRoutes');
 const receivePayRoutes = require('./routes/receivedPaymentRoutes');
+const messagingRoutes = require('./routes/messagingRoutes');
 const fs = require('fs');
 const path = require('path');
 const fileUpload = require('express-fileupload');
@@ -40,6 +41,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/permission', permissionRoutes);
 app.use('/api/delivered', deliveredRoutes);
 app.use('/api/receive', receivePayRoutes);
+app.use('/api/messaging', messagingRoutes);
 // server.js
 
 // Serve static HTML for testing APIs (optional)

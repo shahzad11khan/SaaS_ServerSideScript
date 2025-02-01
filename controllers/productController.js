@@ -5,7 +5,7 @@ const { deleteFromCloudinary } = require('../middlewares/deleteFromCloudinary');
 // Create a new product
 exports.createProduct = async (req, res) => {
   try {
-    const { productName, productDescription, productPrice, productQuantity, productCategory } = req.body;
+    const { productName, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating } = req.body;
     const productImage = req.files.productImage;
     let productImageUrl = '';
     let productImagePublicId = '';
@@ -31,6 +31,7 @@ exports.createProduct = async (req, res) => {
       productPrice,
       productQuantity,
       productCategory,
+      productSubCategory, productTag, rating,
       productImage,
       productImageUrl,
       productImagePublicId
@@ -68,7 +69,8 @@ exports.getProductById = async (req, res) => {
 // Update a product
 exports.updateProduct = async (req, res) => {
   try {
-    const { productName, productDescription, productPrice, productQuantity, productCategory } = req.body;
+    const { productName, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating,
+    } = req.body;
     const productImage = req.files.productImage;
     let updatedproductImageUrl = null;
     let updatedproductImagePublicId = null;
@@ -81,15 +83,17 @@ exports.updateProduct = async (req, res) => {
       const result = await uploadImageToCloudinary(file.tempFilePath);
       updatedproductImageUrl = result.secure_url;
       updatedproductImagePublicId = result.public_id;
-    
-    }else{
+
+    } else {
       updatedproductImageUrl = findProduct.productImageUrl;
       updatedproductImagePublicId = findProduct.productImagePublicId;
     }
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      { productName,userId,userName,role, productDescription, productPrice, productQuantity, productCategory, productImage, productImageUrl: updatedproductImageUrl , 
-        productImagePublicId: updatedproductImagePublicId ,  },
+      {
+        productName, userId, userName, role, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating, productImage, productImageUrl: updatedproductImageUrl,
+        productImagePublicId: updatedproductImagePublicId
+      },
       { new: true }
     );
 
