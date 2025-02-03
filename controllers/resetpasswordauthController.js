@@ -27,9 +27,9 @@ exports.generateResetToken = async (req, res) => {
   
       // Construct the password reset UR
       let resetURL;
-      if (role === "superadmin"||role === "admin" ||role === "manager") {
+      if (user.role === "superadmin"||user.role === "admin" ||user.role === "manager") {
         resetURL = `${process.env.CLIENT_URL_ADMIN}/reset-password/${resetToken}`;
-      } else if (role === "user") {
+      } else if (user.role === "user") {
         resetURL = `${process.env.CLIENT_URL_USER}/reset-password/${resetToken}`;
       } else {
         resetURL = `${process.env.CLIENT_URL_MOBILE}/reset-password/${resetToken}`; // For Flutter deep linking
