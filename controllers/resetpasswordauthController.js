@@ -49,8 +49,10 @@ exports.generateResetToken = async (req, res) => {
       };
   
       await transporter.sendMail(mailOptions);
+
+      console.log(email,resetURL)
   
-      res.status(200).json({ message: 'Password reset link sent to your email' });
+      res.status(200).json({ message: 'Password reset link sent to your email',email:email,URL:resetURL });
     } catch (error) {
       res.status(500).json({ message: 'Server error', error: error.message });
     }
