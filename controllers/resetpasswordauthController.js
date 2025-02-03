@@ -39,11 +39,11 @@ exports.generateResetToken = async (req, res) => {
     // Construct the password reset URL
     let resetURL;
     if (['superadmin', 'admin', 'manager'].includes(user.role)) {
-      resetURL = `${process.env.CLIENT_URL_ADMIN}/reset-password/${resetToken}`;
+      resetURL = `${process.env.CLIENT_URL_ADMIN}/reset-password-token/ ${resetToken}`;
     } else if (user.role === 'user') {
-      resetURL = `${process.env.CLIENT_URL_USER}/reset-password/${resetToken}`;
+      resetURL = `${process.env.CLIENT_URL_USER}/reset-password-token/ ${resetToken}`;
     } else {
-      resetURL = `${process.env.CLIENT_URL_MOBILE}/reset-password/${resetToken}`;
+      resetURL = `${process.env.CLIENT_URL_MOBILE}/reset-password-token/ ${resetToken}`;
     }
 
     // Email options
@@ -52,7 +52,7 @@ exports.generateResetToken = async (req, res) => {
       to: email,
       subject: 'Password Reset Request',
       text: `You requested a password reset. Please click the link below to reset your password:\n\n${resetURL}`,
-      html: `<p>You requested a password reset. Please click the link below to reset your password:</p><a href="${resetURL}" target="_blank">${resetURL}</a>`,
+      html: `<p>Rest Password Token is : ${resetURL}`,
     };
 
     // Send the email
@@ -72,8 +72,7 @@ exports.generateResetToken = async (req, res) => {
 
 // Reset Password
 exports.resetPassword = async (req, res) => {
-  const { token } = req.params;
-  const { newPassword, confirmPassword } = req.body;
+  const { token, newPassword, confirmPassword } = req.body;
 
   try {
     if (newPassword !== confirmPassword) {
