@@ -24,7 +24,8 @@ exports.generateResetToken = async (req, res) => {
       // Generate a refresh token
       const resetToken = user.generateRefreshToken();
       await user.save();
-  
+
+        console.log(process.env.EMAIL_USER, process.env.EMAIL_PASSWORD);
       // Construct the password reset UR
       let resetURL;
       if (user.role === "superadmin"||user.role === "admin" ||user.role === "manager") {
