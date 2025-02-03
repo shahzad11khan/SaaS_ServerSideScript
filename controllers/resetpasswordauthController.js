@@ -4,12 +4,15 @@ const nodemailer = require('nodemailer');
 
 // Configure Nodemailer transporter (e.g., for Gmail SMTP)
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER, // Your email address
-      pass: process.env.EMAIL_PASSWORD, // Your email password or app-specific password
-    },
-  });
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false, 
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
+});
+
 // Generate a Password Reset Token
 exports.generateResetToken = async (req, res) => {
     const { email } = req.body;
