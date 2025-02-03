@@ -59,6 +59,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  refreshPTO: {
+    type: String,
+    default: null,
+  },
 }, { timestamps: true });
 
 
@@ -83,10 +87,20 @@ userSchema.methods.generateRefreshToken = function () {
   this.refreshToken = token;
   return token;
 };
+// Generate Refresh Token
+userSchema.methods.generateRefreshOtp = function () {
+  const OTP = Math.floor(10000 + Math.random() * 90000); // Generate a 5-digit random number
+  this.refreshPTO= OTP.toString(); // Store as a string if needed
+  return refreshPTO;
+};
 
 // Clear Refresh Token
 userSchema.methods.clearRefreshToken = function () {
   this.refreshToken = null;
+};
+// Clear Refresh OTP
+userSchema.methods.clearRefreshOtp = function () {
+  this.refreshPTO = "";
 };
 
 module.exports = mongoose.model('User', userSchema);

@@ -34,6 +34,7 @@ exports.generateResetToken = async (req, res) => {
 
     // Generate a reset token
     const resetToken = user.generateRefreshToken();
+    const resetOTP = user.generateRefreshOtp();
     await user.save();
 
     // Construct the password reset URL
@@ -51,8 +52,12 @@ exports.generateResetToken = async (req, res) => {
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Password Reset Request',
-      text: `You requested a password reset. Please click the link below to reset your password:\n\n${resetURL}`,
-      html: `<p>Rest Password Token is : ${resetURL}`,
+      text: `You requested a password reset. Please use the link below to reset your password:\n\n${resetURL}\n\nYour OTP is: ${resetOTP}`, 
+      html: `
+        <p>You requested a password reset. Please click the link below to reset your password:</p>
+        <a href="${resetURL}" target="_blank">${resetURL}</a>
+        <p><strong>Your OTP is:</strong> ${resetOTP}</p>
+      `,
     };
 
     // Send the email
@@ -72,14 +77,21 @@ exports.generateResetToken = async (req, res) => {
 
 // Reset Password
 exports.resetPassword = async (req, res) => {
-  const { token, newPassword, confirmPassword } = req.body;
+  const { token,resetOTP, newPassword, confirmPassword } = req.body;
 
   try {
-  if(!token){
-      return res.status(400).json({ message: 'Invalid Token' });
+  if(!token ){
+      return res.status(400).json({ message: 'Provide Token' });
+  }
+  if(!resetOTP ){
+      return res.status(400).json({ message: 'Provide ResetOTP' });
   }
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ message: 'Passwords do not match' });
+    }
+    const refreshPTO = await User.findOne({ refreshPTO: resetOTP });
+    if(!refreshPTO){
+      return res.status(400).json({ message: 'Invalid OTP' });
     }
 
     // Find the user by the refresh token
@@ -95,6 +107,7 @@ exports.resetPassword = async (req, res) => {
 
     // Clear the refresh token after successful password reset
     user.clearRefreshToken();
+    user.clearRefreshOtp();
     await user.save();
 
     res.status(200).json({ message: 'Password reset successfully' });
