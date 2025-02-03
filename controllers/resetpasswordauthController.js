@@ -4,13 +4,11 @@ const nodemailer = require('nodemailer');
 
 // Configure Nodemailer transporter (e.g., for Gmail SMTP)
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false, 
+   service: 'gmail',
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
-  },
+  }
 });
 
 // Generate a Password Reset Token
@@ -47,8 +45,13 @@ exports.generateResetToken = async (req, res) => {
         text: `You requested a password reset. Please click the link below to reset your password:\n\n${resetURL}`,
         html: `<p>You requested a password reset. Please click the link below to reset your password:</p><a href="${resetURL}" target="_blank">${resetURL}</a>`,
       };
-  
-      await transporter.sendMail(mailOptions);
+await  transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+     
 
       console.log(email,resetURL)
   
