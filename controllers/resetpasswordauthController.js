@@ -4,62 +4,71 @@ const nodemailer = require('nodemailer');
 
 // Configure Nodemailer transporter (e.g., for Gmail SMTP)
 const transporter = nodemailer.createTransport({
-   service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465, // Use SSL for secure connection
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
+  },
+});
+
+// Verify SMTP connection
+transporter.verify((error, success) => {
+  if (error) {
+    console.error('SMTP Error:', error);
+  } else {
+    console.log('SMTP connected:', success);
   }
 });
 
 // Generate a Password Reset Token
 exports.generateResetToken = async (req, res) => {
-    const { email } = req.body;
-  
-    try {
-      const user = await User.findOne({ email });
-  
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-  
-      // Generate a refresh token
-      const resetToken = user.generateRefreshToken();
-      await user.save();
+  const { email } = req.body;
 
-        console.log(process.env.EMAIL_USER, process.env.EMAIL_PASSWORD);
-      // Construct the password reset UR
-      let resetURL;
-      if (user.role === "superadmin"||user.role === "admin" ||user.role === "manager") {
-        resetURL = `${process.env.CLIENT_URL_ADMIN}/reset-password/${resetToken}`;
-      } else if (user.role === "user") {
-        resetURL = `${process.env.CLIENT_URL_USER}/reset-password/${resetToken}`;
-      } else {
-        resetURL = `${process.env.CLIENT_URL_MOBILE}/reset-password/${resetToken}`; // For Flutter deep linking
-      }
-  
-      // Send the email
-      const mailOptions = {
-        from: process.env.EMAIL_USER, // Sender email
-        to: email, // Recipient email
-        subject: 'Password Reset Request',
-        text: `You requested a password reset. Please click the link below to reset your password:\n\n${resetURL}`,
-        html: `<p>You requested a password reset. Please click the link below to reset your password:</p><a href="${resetURL}" target="_blank">${resetURL}</a>`,
-      };
-await  transporter.sendMail(mailOptions, function(error, info){
-  if (error) {
-    console.log(error);
-  } else {
-    console.log('Email sent: ' + info.response);
-  }
-     
-
-      console.log(email,resetURL)
-  
-      res.status(200).json({ message: 'Password reset link sent to your email',email:email,URL:resetURL });
-    } catch (error) {
-      res.status(500).json({ message: 'Server error', error: error.message });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
-  };
+
+    // Generate a reset token
+    const resetToken = user.generateRefreshToken();
+    await user.save();
+
+    // Construct the password reset URL
+    let resetURL;
+    if (['superadmin', 'admin', 'manager'].includes(user.role)) {
+      resetURL = `${process.env.CLIENT_URL_ADMIN}/reset-password/${resetToken}`;
+    } else if (user.role === 'user') {
+      resetURL = `${process.env.CLIENT_URL_USER}/reset-password/${resetToken}`;
+    } else {
+      resetURL = `${process.env.CLIENT_URL_MOBILE}/reset-password/${resetToken}`;
+    }
+
+    // Email options
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Password Reset Request',
+      text: `You requested a password reset. Please click the link below to reset your password:\n\n${resetURL}`,
+      html: `<p>You requested a password reset. Please click the link below to reset your password:</p><a href="${resetURL}" target="_blank">${resetURL}</a>`,
+    };
+
+    // Send the email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Email Sending Error:', error);
+        return res.status(500).json({ message: 'Failed to send email', error: error.message });
+      }
+      console.log('Email sent:', info.response);
+      res.status(200).json({ message: 'Password reset link sent to your email', email, resetURL });
+    });
+  } catch (error) {
+    console.error('Server Error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Reset Password
 exports.resetPassword = async (req, res) => {
