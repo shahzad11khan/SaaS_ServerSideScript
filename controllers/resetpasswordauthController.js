@@ -81,27 +81,26 @@ exports.resetPassword = async (req, res) => {
   const { token,resetOTP, newPassword, confirmPassword } = req.body;
 
   try {
+     const user = await User.findOne({ refreshToken: token });
+    const refreshPTO = await User.findOne({ refreshOTP: resetOTP });
   if(!token ){
       return res.status(400).json({ message: 'Provide Token' });
   }
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+
+    if(!refreshPTO){
+      return res.status(400).json({ message: 'Invalid OTP' });
+    }
   if(!resetOTP ){
       return res.status(400).json({ message: 'Provide ResetOTP' });
   }
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ message: 'Passwords do not match' });
     }
-    const refreshPTO = await User.findOne({ refreshPTO: resetOTP });
-    if(!refreshPTO){
-      return res.status(400).json({ message: 'Invalid OTP' });
-    }
-
     // Find the user by the refresh token
-    const user = await User.findOne({ refreshToken: token });
-
-    if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired token' });
-    }
-
+  
     // Update the user's password
     user.password = await bcrypt.hash(newPassword, 10);
     user.confirmPassword = newPassword;
