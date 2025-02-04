@@ -11,6 +11,7 @@ exports.login = async (req, res) => {
         return res.status(400).json({ message: 'Email and password are required' });
        }
     let user = await User.findOne({$and: [{ email: email }, { confirmPassword: password }]});
+        console.log(user)
     // let isCompany=null;
     // if (!user) {
     //   isCompany = await Company.findOne({ email: email });
