@@ -41,8 +41,10 @@ exports.getDeliveredProById = async (req, res) => {
 exports.createDeliveredProduct = async (req, res) => {
   try {
     const { productName, quantity, deliveredTo, deliveryDate, status } = req.body;
+    const userId = req.user.id;
 
     const newDeliveredProduct = new DeliveredProduct({
+      userId,
       productName,
       quantity,
       deliveredTo,
@@ -61,7 +63,13 @@ exports.createDeliveredProduct = async (req, res) => {
 exports.updateDeliveredProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedDeliveredProduct = await DeliveredProduct.findByIdAndUpdate(id, req.body, {
+    const { productName, quantity, deliveredTo, deliveryDate, status } = req.body;
+
+    const userId = req.user.id;
+
+    const updatedDeliveredProduct = await DeliveredProduct.findByIdAndUpdate(id, {
+      productName, quantity, deliveredTo, deliveryDate, status,userId,
+    },{
       new: true,
     });
 

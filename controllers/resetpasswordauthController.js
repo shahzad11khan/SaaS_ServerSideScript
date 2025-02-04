@@ -39,14 +39,8 @@ exports.generateResetToken = async (req, res) => {
     await user.save();
 
     // Construct the password reset URL
-    let resetURL;
-    if (['superadmin', 'admin', 'manager'].includes(user.role)) {
-      resetURL = `${process.env.CLIENT_URL_ADMIN}/reset-password-token/${resetToken}`;
-    } else if (user.role === 'user') {
-      resetURL = `${process.env.CLIENT_URL_USER}/reset-password-token/${resetToken}`;
-    } else {
-      resetURL = `${process.env.CLIENT_URL_MOBILE}/reset-password-token/${resetToken}`;
-    }
+    let resetURL =`${process.env.CLIENT_URL_ADMIN}/reset-password-token/${resetToken}`;
+   
 
     // Email options
     const mailOptions = {
@@ -106,11 +100,11 @@ exports.resetPassword = async (req, res) => {
     user.confirmPassword = newPassword;
 
     // Clear the refresh token after successful password reset
-    user.clearRefreshToken();
-    user.clearRefreshOtp();
+    user.refreshToken = null;
+    user.refreshOTP = "";
     await user.save();
 
-    res.status(200).json({ message: 'Password reset successfully',restpasswordis:newPassword });
+    res.status(200).json({ message: 'Password reset successfully'});
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
