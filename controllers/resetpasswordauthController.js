@@ -35,16 +35,17 @@ exports.generateResetToken = async (req, res) => {
     // Generate a reset token
     const resetToken = user.generateRefreshToken();
     const resetOTP = user.generateRefreshOtp();
+    console.log(resetOTP)
     await user.save();
 
     // Construct the password reset URL
     let resetURL;
     if (['superadmin', 'admin', 'manager'].includes(user.role)) {
-      resetURL = `${process.env.CLIENT_URL_ADMIN}/reset-password-token/ ${resetToken}`;
+      resetURL = `${process.env.CLIENT_URL_ADMIN}/reset-password-token/${resetToken}`;
     } else if (user.role === 'user') {
-      resetURL = `${process.env.CLIENT_URL_USER}/reset-password-token/ ${resetToken}`;
+      resetURL = `${process.env.CLIENT_URL_USER}/reset-password-token/${resetToken}`;
     } else {
-      resetURL = `${process.env.CLIENT_URL_MOBILE}/reset-password-token/ ${resetToken}`;
+      resetURL = `${process.env.CLIENT_URL_MOBILE}/reset-password-token/${resetToken}`;
     }
 
     // Email options

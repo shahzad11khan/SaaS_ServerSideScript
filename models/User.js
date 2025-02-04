@@ -59,7 +59,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
-  refreshPTO: {
+  refreshOTP: {
     type: String,
     default: null,
   },
@@ -90,8 +90,8 @@ userSchema.methods.generateRefreshToken = function () {
 // Generate Refresh Token
 userSchema.methods.generateRefreshOtp = function () {
   const OTP = Math.floor(10000 + Math.random() * 90000); // Generate a 5-digit random number
-  this.refreshPTO= OTP.toString(); // Store as a string if needed
-  return refreshPTO;
+  this.refreshOTP= OTP.toString(); // Store as a string if needed
+  return this.refreshOTP;
 };
 
 // Clear Refresh Token
