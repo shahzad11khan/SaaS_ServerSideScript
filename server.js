@@ -11,6 +11,7 @@ const receivePayRoutes = require('./routes/receivedPaymentRoutes');
 const messagingRoutes = require('./routes/messagingRoutes');
 const onhandRoutes = require('./routes/onhandRoutes');
 const tagManagementRoutes = require('./routes/tagManagementRutes');
+const stockManagementRoutes = require('./routes/stockRoutes');
 const fs = require('fs');
 const path = require('path');
 const fileUpload = require('express-fileupload');
@@ -40,6 +41,7 @@ connectDB();
 // API Routes
 app.use('/api/products', productRoutes);
 app.use('/api/tag', tagManagementRoutes);
+app.use('/api/stock', stockManagementRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/companies', companyRoutes);
 app.use('/api/user', userRoutes);
