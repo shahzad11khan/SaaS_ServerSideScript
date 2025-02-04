@@ -102,7 +102,7 @@ exports.resetPassword = async (req, res) => {
     // Find the user by the refresh token
   
     // Update the user's password
-    user.password = await bcrypt.hash(newPassword, 10);
+    user.password = newPassword;
     user.confirmPassword = newPassword;
 
     // Clear the refresh token after successful password reset
