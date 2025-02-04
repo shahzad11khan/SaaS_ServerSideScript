@@ -101,7 +101,7 @@ exports.resetPassword = async (req, res) => {
 
     // Clear the refresh token after successful password reset
     user.refreshToken = null;
-    user.refreshOTP = "";
+    user.refreshOTP = null;
     await user.save();
 
     res.status(200).json({ message: 'Password reset successfully'});

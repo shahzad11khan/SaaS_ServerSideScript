@@ -100,7 +100,7 @@ userSchema.methods.clearRefreshToken = function () {
 };
 // Clear Refresh OTP
 userSchema.methods.clearRefreshOtp = function () {
-  this.refreshPTO = "";
+  this.refreshPTO = null;
 };
 
 module.exports = mongoose.model('User', userSchema);
