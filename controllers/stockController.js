@@ -35,7 +35,8 @@ exports.createStock = async (req, res) => {
 // Get all Stocks
 exports.getAllStock = async (req, res) => {
     try {
-        const Stocks = await StockManagement.find();
+        const Stocks = await StockManagement.find()
+        .populate('userId', 'email');
         res.status(200).json(Stocks);
     } catch (error) {
         console.error('Error fetching Stocks:', error);
