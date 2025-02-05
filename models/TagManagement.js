@@ -23,7 +23,7 @@ const tagManagementSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: ['admin', 'user'], // Restrict role to specific values
+    enum: ['admin', 'user','superadmin'], // Restrict role to specific values
   },
 }, {
   timestamps: true, // Automatically add createdAt and updatedAt fields

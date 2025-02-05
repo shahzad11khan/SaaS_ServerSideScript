@@ -11,7 +11,10 @@ const categorySchema = new mongoose.Schema({
       required: true,
     },
     userName:{type:String},
-    role:{type:String},
+    role:{  type: String,
+      required: true,
+      enum: ['admin', 'user','superadmin'], // Restrict role to specific values
+    }
 }, {
     timestamps: true, // Automatically add createdAt and updatedAt fields
   });

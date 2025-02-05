@@ -2,7 +2,9 @@ const Category = require('../models/Category');
 // Add New Category
 exports.addCategory = async (req, res) => {
     try {
-      const { userId, userName, userRole } = req.user;
+      const userId = req.user.id;
+      const userName = req.user.username;
+      const role = req.user.role;
       const { mainCategory, subCategory } = req.body;
   
       const newCategory = new Category({
@@ -10,7 +12,7 @@ exports.addCategory = async (req, res) => {
         subCategory,
         userId,
         userName,
-        userRole
+        role:role
       });
   
       const savedCategory = await newCategory.save();
@@ -44,15 +46,17 @@ exports.addCategory = async (req, res) => {
   // Update Category
   exports.updateCategory = async (req, res) => {
     try {
-      const { userId, userName, userRole } = req.user;
-      const updatedCategory = await Category.findByIdAndUpdate(
+      const userId = req.user.id;
+      const userName = req.user.username;
+      const role = req.user.role;
+            const updatedCategory = await Category.findByIdAndUpdate(
         req.params.id,
         {
           ...req.body,
           userId,
           userName,
-          userRole
-        },
+          role
+               },
         { new: true }
       );
   
