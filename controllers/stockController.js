@@ -4,7 +4,7 @@ const StockManagement = require('../models/Stock');
 // Create a new Stock
 exports.createStock = async (req, res) => {
     try {
-        const { productName, quantity, price, totalPrice, category, subcategory, dateAdded, isActive } = req.body;
+        const { productName, quantity, price, totalPrice, category, subcategory, dateAdded, isActive,warehouseName } = req.body;
 
         // Check if the StockNumber already exists
         const existingStock = await StockManagement.findOne({ productName });
@@ -16,7 +16,7 @@ exports.createStock = async (req, res) => {
         const role = req.user.role;
         // Create a new Stock
         const newStock = new StockManagement({
-            productName, quantity, price, totalPrice, category, subcategory, dateAdded, isActive,
+            productName, quantity, price, totalPrice, category, subcategory, dateAdded, isActive,warehouseName,
             userId,
             username: userName,
             role,
@@ -60,13 +60,13 @@ exports.getStockById = async (req, res) => {
 // Update a Stock by ID
 exports.updateStock = async (req, res) => {
     try {
-        const { productName, quantity, price, totalPrice, category, subcategory, dateAdded, isActive } = req.body;
+        const { productName, quantity, price, totalPrice, category, subcategory, dateAdded, isActive,warehouseName } = req.body;
         const userId = req.user.id;
         const userName = req.user.username;
         const role = req.user.role;
         const updatedStock = await StockManagement.findByIdAndUpdate(
             req.params.id,
-            { productName, quantity, price, totalPrice, category, subcategory, dateAdded, isActive,
+            { productName, quantity, price, totalPrice, category, subcategory, dateAdded, isActive,warehouseName,
                 userId,
                 username: userName,
                 role, },

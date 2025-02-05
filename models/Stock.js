@@ -47,6 +47,15 @@ const stockSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    warehouse: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Warehouse', // Reference to the User model
+        required: true,
+    },
+    warehouseName: {
+        type:STring,
+        required:true,
+    },
     isActive: {
         type: Boolean,
         default: true
