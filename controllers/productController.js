@@ -78,9 +78,9 @@ exports.updateProduct = async (req, res) => {
     const userName = req.user.username;
     const role = req.user.role;
     const findProduct = await Product.findById(id)
-    if (file) {
+    if (productImage) {
       await deleteFromCloudinary(findProduct.productImagePublicId);
-      const result = await uploadImageToCloudinary(file.tempFilePath);
+      const result = await uploadImageToCloudinary(productImage.tempFilePath);
       updatedproductImageUrl = result.secure_url;
       updatedproductImagePublicId = result.public_id;
 
