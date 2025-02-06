@@ -2,13 +2,23 @@ const Permissions = require('../models/permissions');
   exports.createPermission = async (req, res) => {
     try {
       const { parentPermission, permissions } = req.body;
-  
+      const userId = req.user.id;
+      const userName = req.user.username;
+       const role = req.user.role;
       if (!parentPermission) {
         return res.status(400).json({ success: false, message: "Parent permission is required" });
       }
 
-      const newPermission = await Permissions.create({ parentPermission, permissions });
-      res.status(201).json({ success: true, data: newPermission });
+      const newPermission = await Permissions({
+         parentPermission,
+          permissions,
+          userId,
+          userName,
+          role
+       });
+
+   const savedPermission =   await newPermission.save();
+      res.status(201).json({ success: true, data: savedPermission });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
@@ -70,11 +80,18 @@ const Permissions = require('../models/permissions');
     try {
       const { id } = req.params;
       const { parentPermission, permissions } = req.body;
-  
+      const userId = req.user.id;
+      const userName = req.user.username;
+      const role = req.user.role;
       // Update role
       const updatedPermission = await Permissions.findByIdAndUpdate(
         id,
-        { parentPermission, permissions },
+        { parentPermission,
+          permissions,
+          userId,
+          userName,
+          role
+        },
         { new: true }
       );
   

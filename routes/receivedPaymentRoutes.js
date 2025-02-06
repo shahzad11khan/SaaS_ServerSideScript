@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const receivedPaymentController = require('../controllers/receivedPaymentController');
+const {authMiddleware} = require('../middlewares/authMiddleware')
 
-router.get('/', receivedPaymentController.getReceivedPayments);
+router.get('/',authMiddleware(["superadmin"],["admin"],["manager"],["user"]), receivedPaymentController.getReceivedPayments);
 router.get('/:id', receivedPaymentController.getReceivedPaymentById);
-router.post('/', receivedPaymentController.createReceivedPayment);
-router.put('/:id', receivedPaymentController.updateReceivedPayment);
-router.delete('/:id', receivedPaymentController.deleteReceivedPayment);
+router.post('/',authMiddleware(["superadmin"],["admin"],["manager"],["user"]), receivedPaymentController.createReceivedPayment);
+router.put('/:id',authMiddleware(["superadmin"],["admin"],["manager"]), receivedPaymentController.updateReceivedPayment);
+router.delete('/:id',authMiddleware(["superadmin"],["admin"],["manager"]), receivedPaymentController.deleteReceivedPayment);
 
 module.exports = router;

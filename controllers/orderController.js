@@ -47,6 +47,35 @@ const getAllOrders = async (req, res) => {
   }
 };
 
+
+// only deliverd 
+const getDeliveredOrders = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, search = "" } = req.query;
+
+    const query = { status: "Delivered" };
+    if (search) {
+      query.productName = { $regex: search, $options: "i" };
+    }
+
+    const deliveredOrders = await Order.find(query)
+      .populate('userId') // Populate customer details
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+
+    const total = await Order.countDocuments(query);
+
+    res.status(200).json({
+      deliveredOrders,
+      total,
+      currentPage: parseInt(page),
+      totalPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch delivered orders", error: error.message });
+  }
+};
+
 // Get a specific order by ID
 const getOrderById = async (req, res) => {
   const { orderId } = req.params;
@@ -106,6 +135,7 @@ module.exports = {
   createOrder,
   getAllOrders,
   getOrderById,
+  getDeliveredOrders,
   updateOrderStatus,
   deleteOrder,
 };

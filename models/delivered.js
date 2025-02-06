@@ -15,6 +15,8 @@ const DeliveredProductSchema = new mongoose.Schema({
     ref: 'User', // Reference to the User model (optional)
     required: true,
   },
+  userName:{type:String},
+  role:{type:String},
   deliveryDate: {
     type: Date,
     default: Date.now,

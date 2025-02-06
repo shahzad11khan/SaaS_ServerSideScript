@@ -15,6 +15,8 @@ const ReceivedPaymentSchema = new mongoose.Schema({
     ref: 'User', // Reference to the User model (optional)
     required: true,
   },
+  userName:{type:String},
+  role:{type:String},
   paymentMethod: {
     type: String,
     enum: ['Cash', 'Card', 'Bank Transfer', 'Online Payment'],

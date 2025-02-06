@@ -52,7 +52,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/permission', permissionRoutes);
 app.use('/api/delivered', deliveredRoutes);
 app.use('/api/receive', receivePayRoutes);
-app.use('/api/messaging', messagingRoutes);
+app.use('/api/notification', messagingRoutes);
 app.use('/api/onhand', onhandRoutes);
 // server.js
 

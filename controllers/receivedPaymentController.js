@@ -7,7 +7,7 @@ exports.getReceivedPayments = async (req, res) => {
     const query = search ? { paymentMethod: { $regex: search, $options: 'i' } } : {};
 
     const receivedPayments = await ReceivedPayment.find(query)
-      .populate('receivedFrom', 'username') // Populate person details
+      .populate('userId') // Populate person details
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
 
@@ -43,9 +43,14 @@ exports.getReceivedPaymentById = async (req, res) => {
 exports.createReceivedPayment = async (req, res) => {
   try {
     const { paymentAmount, paymentDate, receivedFrom, paymentMethod, status } = req.body;
-
+const userId = req.user.id;
+const userName = req.user.username;
+const role = req.user.role;
     const newPayment = new ReceivedPayment({
       paymentAmount,
+      userId,
+      userName,
+      role,
       paymentDate,
       receivedFrom,
       paymentMethod,
@@ -64,7 +69,15 @@ exports.createReceivedPayment = async (req, res) => {
 exports.updateReceivedPayment = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedPayment = await ReceivedPayment.findByIdAndUpdate(id, req.body, {
+    const userId = req.user.id;
+const userName = req.user.username;
+const role = req.user.role;
+    const updatedPayment = await ReceivedPayment.findByIdAndUpdate(id,{
+      ...req.body,
+      userId,
+      userName,
+      role
+    }, {
       new: true,
     });
 

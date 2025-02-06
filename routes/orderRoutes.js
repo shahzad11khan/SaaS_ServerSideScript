@@ -6,6 +6,7 @@ const {authMiddleware} = require('../middlewares/authMiddleware')
 router.post('/order', authMiddleware(["superadmin"],["admin"],["manager"],["user"]),orderController.createOrder);
 
 router.get('/orders', orderController.getAllOrders);
+router.get('/deliverdOrders', orderController.getDeliveredOrders);
 
 router.get('/order:Id',authMiddleware(["superadmin"],["admin"],["manager"]), orderController.getOrderById);
 

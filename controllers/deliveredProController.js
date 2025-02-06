@@ -42,9 +42,13 @@ exports.createDeliveredProduct = async (req, res) => {
   try {
     const { productName, quantity, deliveredTo, deliveryDate, status } = req.body;
     const userId = req.user.id;
+    const userName = req.user.id;
+    const role = req.user.role;
 
     const newDeliveredProduct = new DeliveredProduct({
       userId,
+      userName,
+      role,
       productName,
       quantity,
       deliveredTo,
@@ -66,9 +70,11 @@ exports.updateDeliveredProduct = async (req, res) => {
     const { productName, quantity, deliveredTo, deliveryDate, status } = req.body;
 
     const userId = req.user.id;
+    const userName = req.user.id;
+    const role = req.user.role;
 
     const updatedDeliveredProduct = await DeliveredProduct.findByIdAndUpdate(id, {
-      productName, quantity, deliveredTo, deliveryDate, status,userId,
+      productName, quantity, deliveredTo, deliveryDate, status,userId, userName, role
     },{
       new: true,
     });
