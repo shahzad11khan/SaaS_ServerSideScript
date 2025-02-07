@@ -1,17 +1,132 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Server Status</title>
+  <title>FCM Push Notification</title>
+
+  <!-- Firebase SDK (Module) -->
+  <!-- <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-messaging.js";
+  
+    // ✅ Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4TBSQghObve7itDEsDLeex3LCHZSBhDs",
+      authDomain: "backend-ce65b.firebaseapp.com",
+      projectId: "backend-ce65b",
+      storageBucket: "backend-ce65b.appspot.com",
+      messagingSenderId: "567790648298",
+      appId: "1:567790648298:web:30b4ba9b77b82a9bbbd093"
+    };
+  
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+  
+    // ✅ Register Service Worker Correctly
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/firebase-messaging-sw.js") // 🚀 No need for `type: "module"`
+        .then((registration) => {
+          console.log("✅ Service Worker Registered:", registration.scope);
+        })
+        .catch((err) => console.error("❌ Service Worker Registration Failed:", err));
+    }
+  
+    // ✅ Request Permission and Get Token
+    async function requestPermission() {
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") throw new Error("Permission not granted");
+        
+        const token = await getToken(messaging, { vapidKey: "YOUR_VAPID_KEY" });
+        console.log("📲 FCM Token:", token);
+        document.getElementById("token").innerText = `Token: ${token}`;
+      } catch (error) {
+        console.error("❌ Error getting FCM token:", error);
+      }
+    }
+  
+    // ✅ Handle Foreground Messages
+    onMessage(messaging, (payload) => {
+      console.log("📩 Foreground Message received:", payload);
+      alert(`New notification: ${payload.notification.title}`);
+    });
+  </script> -->
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js";
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-messaging.js";
+  
+    // ✅ Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4TBSQghObve7itDEsDLeex3LCHZSBhDs",
+      authDomain: "backend-ce65b.firebaseapp.com",
+      projectId: "backend-ce65b",
+      storageBucket: "backend-ce65b.appspot.com",
+      messagingSenderId: "567790648298",
+      appId: "1:567790648298:web:30b4ba9b77b82a9bbbd093"
+    };
+  
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+  
+    // ✅ Register Service Worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/firebase-messaging-sw.js")
+        .then((registration) => {
+          console.log("✅ Service Worker Registered:", registration.scope);
+        })
+        .catch((err) => console.error("❌ Service Worker Registration Failed:", err));
+    }
+  
+    // ✅ Function to Request Notification Permission & Get Token
+    async function requestPermission() {
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") throw new Error("Permission not granted");
+        
+        const token = await getToken(messaging, { vapidKey: "BP8ctQNhFZT2N1037cAbKl1W7MSL3bxoAaUZohuFhd9jyae14QcQ0VzJNK_3xs3RbSwYfItJ00hfLbnYVE0E4SA" });
+        console.log("📲 FCM Token:", token);
+        document.getElementById("token").innerText = `Token: ${token}`;
+      } catch (error) {
+        console.error("❌ Error getting FCM token:", error);
+      }
+    }
+  
+    // ✅ Make requestPermission available globally
+    window.requestPermission = requestPermission;
+  
+    // ✅ Handle Foreground Messages
+    onMessage(messaging, (payload) => {
+      console.log("📩 Foreground Message received:", payload);
+      alert(`New notification: ${payload.notification.title}`);
+    });
+  </script>
+  
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="flex items-center justify-center min-h-screen bg-gray-100">
-  <div class="text-center bg-white p-8 rounded-lg shadow-md max-w-md">
-    <h1 class="text-4xl font-bold text-green-600 mb-4">Server Is Running</h1>
-    <p class="text-gray-700 text-lg">
-      The server is up and running smoothly. All systems are operational, and everything is working as expected.
-    </p>
+
+<body class="flex flex-col items-center justify-center h-screen bg-gray-100 text-gray-800">
+
+  <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+    <h1 class="text-2xl font-bold mb-4 text-blue-600">FCM Push Notification</h1>
+    <p class="text-gray-600 mb-4">Click the button below to enable push notifications.</p>
+
+    <button onclick="requestPermission()"
+      class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition duration-300">
+      Enable Notifications
+    </button>
+
+    <p id="token" class="mt-4 text-xs text-gray-500"></p>
   </div>
+
 </body>
+
 </html>
