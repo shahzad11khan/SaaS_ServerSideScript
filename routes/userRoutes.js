@@ -3,7 +3,7 @@
 const express = require('express');
 const { signup, getUsers, getUserById, updateUser, deleteUser } = require('../controllers/userController');
 const { login } = require('../controllers/authController');
-const { generateResetToken,resetPassword } = require('../controllers/resetpasswordauthController');
+const { generateResetToken,resetPassword,verifyOTP } = require('../controllers/resetpasswordauthController');
 const {authMiddleware} = require('../middlewares/authMiddleware')
 const router = express.Router();
 
@@ -18,5 +18,6 @@ router.put('/user/:id', updateUser);
 router.delete('/user/:id',authMiddleware(["superadmin","admin","manager"]), deleteUser);
 // rest password
 router.post('/forget-password', generateResetToken);
+router.post('/verifyOTP', verifyOTP);
 router.post('/reset-password', resetPassword);
 module.exports = router;

@@ -22,6 +22,8 @@ transporter.verify((error, success) => {
   }
 });
 
+
+
 // Generate a Password Reset Token
 exports.generateResetToken = async (req, res) => {
   const { email } = req.body;
@@ -70,42 +72,49 @@ exports.generateResetToken = async (req, res) => {
   }
 };
 
-// Reset Password
-exports.resetPassword = async (req, res) => {
-  const { token,resetOTP, newPassword, confirmPassword } = req.body;
+exports.verifyOTP = async (req, res) => {
+  const { email, OTP } = req.body; // Get email and OTP from request body
 
   try {
-     const user = await User.findOne({ refreshToken: token });
-    const refreshPTO = await User.findOne({ refreshOTP: resetOTP });
-  if(!token ){
-      return res.status(400).json({ message: 'Provide Token' });
-  }
+    // Find the user by email and OTP
+    const user = await User.findOne({ email, refreshOTP: OTP });
+
     if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired token' });
+      return res.status(400).json({ message: "Invalid OTP or email" });
     }
 
-    if(!refreshPTO){
-      return res.status(400).json({ message: 'Invalid OTP' });
-    }
-  if(!resetOTP ){
-      return res.status(400).json({ message: 'Provide ResetOTP' });
+    res.status(200).json({ message: "OTP verified successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
   }
-    if (newPassword !== confirmPassword) {
-      return res.status(400).json({ message: 'Passwords do not match' });
+};
+
+// Reset Password
+exports.resetPassword = async (req, res) => {
+  const { email, newPassword, confirmPassword } = req.body;
+
+  try {
+    // Find user by email
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
     }
-    // Find the user by the refresh token
-  
-    // Update the user's password
+
+    // Check if new passwords match
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    // Update user password and reset refreshToken and OTP
     user.password = newPassword;
     user.confirmPassword = newPassword;
-
-    // Clear the refresh token after successful password reset
-    user.refreshToken = null;
-    user.refreshOTP = null;
+    user.refreshToken = "";  // Remove refresh token
+    user.refreshOTP = "";      // Clear OTP
     await user.save();
 
-    res.status(200).json({ message: 'Password reset successfully'});
+    res.status(200).json({ message: "Password reset successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
