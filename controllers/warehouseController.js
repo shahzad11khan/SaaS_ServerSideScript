@@ -3,7 +3,9 @@ const Warehouse = require('../models/warehouse');
 // Create Warehouse
 exports.createWarehouse = async (req, res) => {
   const { warehouse, location, manager } = req.body;
-  const { userId, userName, role } = req.user;
+  const userId = req.user.id;
+  const userName = req.user.username;
+  const role = req.user.role;
 
   try {
     const newWarehouse = new Warehouse({
@@ -47,9 +49,16 @@ exports.getWarehouseById = async (req, res) => {
 // Update Warehouse
 exports.updateWarehouse = async (req, res) => {
   try {
+    const userId = req.user.id;
+    const userName = req.user.username;
+    const role = req.user.role;
     const updatedWarehouse = await Warehouse.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+      req.params.id,{
+        ...req.body,
+        userId,
+        userName,
+        role
+      },
       { new: true }
     );
 

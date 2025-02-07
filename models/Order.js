@@ -44,7 +44,6 @@ const orderSchema = new mongoose.Schema({
   },
   barcode: {
     type: String,
-    unique: true, 
     default:null
   },
 }, {
