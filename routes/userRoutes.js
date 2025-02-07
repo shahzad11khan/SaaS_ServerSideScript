@@ -15,7 +15,7 @@ router.post('/signup', signup);
 router.get('/users', getUsers);
 router.get('/user/:id', getUserById);
 router.put('/user/:id', updateUser);
-router.delete('/user/:id',authMiddleware(["superadmin"],["admin"],["manager"]), deleteUser);
+router.delete('/user/:id',authMiddleware(["superadmin","admin","manager"]), deleteUser);
 // rest password
 router.post('/forget-password', generateResetToken);
 router.post('/reset-password', resetPassword);
