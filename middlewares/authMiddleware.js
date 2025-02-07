@@ -38,6 +38,7 @@ export const authMiddleware = (allowedRoles = [], allowedPermissions = []) => {
 
       // Fetch user from database to check role & permissions
       const user = await UserModel.findById(decoded.userId);
+      console.log(user)
       if (!user) {
         return res.status(401).json({ message: "User not found." });
       }
@@ -47,12 +48,12 @@ export const authMiddleware = (allowedRoles = [], allowedPermissions = []) => {
         return res.status(403).json({ message: "Forbidden: Insufficient role privileges." });
       }
 
-      if (user.role === 'user' && allowedPermissions.length) {
-        const hasPermission = allowedPermissions.every((perm) => user.permissions.includes(perm));
-        if (!hasPermission) {
-          return res.status(403).json({ message: "Forbidden: Insufficient permissions." });
-        }
-      }
+      // if (user.role === 'user' && allowedPermissions.length) {
+      //   const hasPermission = allowedPermissions.every((perm) => user.permissions.includes(perm));
+      //   if (!hasPermission) {
+      //     return res.status(403).json({ message: "Forbidden: Insufficient permissions." });
+      //   }
+      // }
 
       // Attach user details to request for further use
       req.user = {
