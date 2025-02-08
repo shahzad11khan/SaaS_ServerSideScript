@@ -50,7 +50,7 @@ app.use('/api/companies', companyRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/permission', permissionRoutes);
 app.use('/api/receive', receivePayRoutes);
-app.use('/api/notification', messagingRoutes);
+app.use('/v1/api/notification', messagingRoutes);
 app.use('/api/onhand', onhandRoutes);
 // server.js
 
