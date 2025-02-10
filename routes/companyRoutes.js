@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
   
 
 // router.post('/uploaddata', companyController.createCompany);
-router.post('/uploaddata', companyController.createCompany);
+router.post('/create', companyController.createCompany);
 // router.post('/uploaddata', upload, companyController.createCompany);
 router.get('/', companyController.getCompanies);
 router.put('/update/:id',companyController.updateCompany);

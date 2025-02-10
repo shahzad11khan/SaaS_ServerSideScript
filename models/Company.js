@@ -67,10 +67,6 @@ const companySchema = new mongoose.Schema(
       unique: true,
       index: true
     },
-    taxId: {
-      type: String,
-      required: true,
-    },
     businessType: {
       type: String,
       required: true,

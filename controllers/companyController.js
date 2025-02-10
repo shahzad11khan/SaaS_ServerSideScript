@@ -19,13 +19,12 @@ exports.createCompany = async (req, res) => {
       ownerEmail,
       ownerPhoneNumber,
       businessLicense,
-      taxId,
       businessType,
       businessAddress,
       isActive,
     } = req.body;
-    // console.log(req.body)
-    // console.log(req.files);
+    console.log(req.body)
+    console.log(req.files);
     const file  = req.files.companyLogo
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/;
     let companyLogoUrl = '';
@@ -82,7 +81,6 @@ exports.createCompany = async (req, res) => {
       ownerEmail,
       ownerPhoneNumber,
       businessLicense,
-      taxId,
       businessType,
       businessAddress,
       isActive,
@@ -105,7 +103,7 @@ exports.createCompany = async (req, res) => {
 exports.updateCompany = async (req, res) => {
   try {
     const { id } = req.params;  
-    const { companyName, registrationNumber, email, address, password, phoneNumber, VatNumber, ownerName, ownerEmail, ownerPhoneNumber, businessLicense, taxId, businessType, businessAddress, isActive } = req.body;
+    const { companyName, registrationNumber, email, address, password, phoneNumber, VatNumber, ownerName, ownerEmail, ownerPhoneNumber, businessLicense, businessType, businessAddress, isActive } = req.body;
     const file  = req.files.companyLogo
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/;
     let updatedCompanyLogo = null;

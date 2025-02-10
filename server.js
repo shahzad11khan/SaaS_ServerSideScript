@@ -40,14 +40,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 connectDB();
 
 // API Routes
+app.use('/api/companies', companyRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/tag', tagManagementRoutes);
 app.use('/api/stock', stockManagementRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/warehouse', warehouseRoutes);
-app.use('/api/companies', companyRoutes);
-app.use('/api/user', userRoutes);
 app.use('/api/permission', permissionRoutes);
 app.use('/api/receive', receivePayRoutes);
 app.use('/v1/api/notification', messagingRoutes);
