@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 
 const tagManagementSchema = new mongoose.Schema({
+  
   tagNumber: {
     type: String,
     required: true,

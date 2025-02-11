@@ -8,10 +8,10 @@ router.post('/order', authMiddleware(["superadmin","admin","manager","user"]), o
 router.get('/orders', orderController.getAllOrders);
 router.get('/deliverdOrders', orderController.getDeliveredOrders);
 
-router.get('/order:Id',authMiddleware(["superadmin","admin","manager"]), orderController.getOrderById);
+router.get('/order:Id',authMiddleware(["superadmin","admin","manager","user"]), orderController.getOrderById);
 
-router.put('/order:Id', authMiddleware(["superadmin","admin","manager"]),orderController.updateOrderStatus);
+router.put('/order:Id', authMiddleware(["superadmin","admin","manager","user"]),orderController.updateOrderStatus);
 
-router.delete('/order:Id',authMiddleware(["superadmin","admin","manager"]), orderController.deleteOrder);
+router.delete('/order:Id',authMiddleware(["superadmin","admin","manager","user"]), orderController.deleteOrder);
 
 module.exports = router;

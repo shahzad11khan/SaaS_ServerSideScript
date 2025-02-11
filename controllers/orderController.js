@@ -41,7 +41,15 @@ const createOrder = async (req, res) => {
 // Get all orders
 const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().populate('userId').populate('products.productId');
+    const orders = await Order.find()
+    .populate({
+      path: 'userId',
+      select: 'companyId', // Fetch userName and companyId from User model
+      populate: {
+        path: 'companyId',
+        select: 'companyName', // Fetch companyName from Company model
+      },
+    });
     res.status(200).json(orders);
   } catch (error) {
     console.error('Error fetching orders:', error);

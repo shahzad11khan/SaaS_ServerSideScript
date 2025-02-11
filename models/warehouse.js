@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const warehouseSchema = new mongoose.Schema({
+  
   warehouse: {
     type: String,
     required: true,

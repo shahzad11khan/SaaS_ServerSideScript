@@ -22,10 +22,10 @@ const storage = multer.diskStorage({
   
 
 // Routes
-router.post('/addproduct',authMiddleware(["superadmin","admin","manager"]), productController.createProduct);
+router.post('/addproduct',authMiddleware(["superadmin","admin","manager","user"]), productController.createProduct);
 router.get('/', productController.getAllProducts);
-router.get('/:id',authMiddleware(["superadmin","admin","manager"]), productController.getProductById);
-router.put('/update/:id',authMiddleware(["superadmin","admin","manager"]), productController.updateProduct);
-router.delete('/delete/:id',authMiddleware(["superadmin","admin","manager"]), productController.deleteProduct);
+router.get('/:id',authMiddleware(["superadmin","admin","manager","user"]), productController.getProductById);
+router.put('/update/:id',authMiddleware(["superadmin","admin","manager","user"]), productController.updateProduct);
+router.delete('/delete/:id',authMiddleware(["superadmin","admin","manager","user"]), productController.deleteProduct);
 
 module.exports = router;

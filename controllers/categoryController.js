@@ -25,7 +25,15 @@ exports.addCategory = async (req, res) => {
   // Get All Categories
   exports.getAllCategories = async (req, res) => {
     try {
-      const categories = await Category.find();
+      const categories = await Category.find()
+      .populate({
+        path: 'userId',
+        select: 'companyId', // Fetch userName and companyId from User model
+        populate: {
+          path: 'companyId',
+          select: 'companyName', // Fetch companyName from Company model
+        },
+      });
       res.status(200).json(categories);
     } catch (error) {
       res.status(500).json({ message: error.message });

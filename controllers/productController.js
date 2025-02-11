@@ -48,12 +48,23 @@ exports.createProduct = async (req, res) => {
 // Get all products
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find()
+    // .populate('userId');
+      .populate({
+        path: 'userId',
+        select: 'companyId', // Fetch userName and companyId from User model
+        populate: {
+          path: 'companyId',
+          select: 'companyName', // Fetch companyName from Company model
+        },
+      });
+
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching products', error });
   }
 };
+
 
 // Get a single product by ID
 exports.getProductById = async (req, res) => {

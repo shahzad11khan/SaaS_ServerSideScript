@@ -36,7 +36,15 @@ exports.createTag = async (req, res) => {
 // Get all tags
 exports.getAllTags = async (req, res) => {
   try {
-    const tags = await TagManagement.find();
+    const tags = await TagManagement.find()
+    .populate({
+      path: 'userId',
+      select: 'companyId', // Fetch userName and companyId from User model
+      populate: {
+        path: 'companyId',
+        select: 'companyName', // Fetch companyName from Company model
+      },
+    });
     res.status(200).json(tags);
   } catch (error) {
     console.error('Error fetching tags:', error);

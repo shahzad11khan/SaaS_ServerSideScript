@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const ReceivedPaymentSchema = new mongoose.Schema({
+  
   paymentAmount: {
     type: Number,
     required: true,

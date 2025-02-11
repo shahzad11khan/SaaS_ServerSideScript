@@ -27,7 +27,14 @@ exports.createWarehouse = async (req, res) => {
 // Get All Warehouses
 exports.getWarehouses = async (req, res) => {
   try {
-    const warehouses = await Warehouse.find();
+    const warehouses = await Warehouse.find().populate({
+      path: 'userId',
+      select: 'companyId', // Fetch userName and companyId from User model
+      populate: {
+        path: 'companyId',
+        select: 'companyName', // Fetch companyName from Company model
+      },
+    });
     res.status(200).json(warehouses);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching warehouses', error });
