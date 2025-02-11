@@ -5,12 +5,13 @@ const { signup, getUsers, getUserById, updateUser, deleteUser } = require('../co
 const { login } = require('../controllers/authController');
 const { generateResetToken,resetPassword,verifyOTP } = require('../controllers/resetpasswordauthController');
 const {authMiddleware} = require('../middlewares/authMiddleware')
+const {companyMiddleware} = require('../middlewares/companyMiddleware.js')
 const router = express.Router();
 
 // Login 
 router.post('/login',login)
 // Signup 
-router.post('/signup', signup);
+router.post('/signup',companyMiddleware,  signup);
 // CRUD routes
 router.get('/users', getUsers);
 router.get('/user/:id', getUserById);

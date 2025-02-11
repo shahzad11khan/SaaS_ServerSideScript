@@ -9,6 +9,7 @@ exports.signup = async (req, res) => {
     // console.log(req.files.userLogo)
     const { fullName, username, email, password, confirmPassword,status, dateOfBirth, permission, role } = req.body;
     const file  = req.files.userLogo
+    console.log(file , req.body)
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/;
     let userLogoUrl = '';
     let userLogoPublicId = '';
@@ -64,7 +65,8 @@ exports.signup = async (req, res) => {
       status,
       role,
       userLogoUrl,
-      userLogoPublicId
+      userLogoPublicId,
+      companyId:req.company.id,
     });
 
     await user.save();
@@ -77,43 +79,25 @@ exports.signup = async (req, res) => {
 
 // Get all users
 exports.getUsers = async (req, res) => {
-    try {
-      // Destructure query parameters
-      const { page = 1, limit = 10, sortBy = 'userName', order = 'asc', search = '' } = req.query;
-  
-      // Convert sort order to 1 for ASC and -1 for DESC
-      const sortOrder = order === 'desc' ? -1 : 1;
-  
-      // Build the query to match search term (if provided)
-      const searchQuery = search
-        ? { $or: [{ email: { $regex: search, $options: 'i' } },{ username: { $regex: search, $options: 'i' } }, { fullName: { $regex: search, $options: 'i' } }] }
-        : {}; // Search by company name or registration number
-  
-      // Aggregation pipeline
-      const user = await User.aggregate([
-        { $match: searchQuery }, // Search filter
-        { $sort: { [sortBy]: sortOrder } }, // Sorting
-        { $skip: (page - 1) * limit }, // Pagination: skip results based on current page
-        { $limit: parseInt(limit) }, // Pagination: limit number of results per page
-      ]);
-  
-      // Count total number of companies (without pagination)
-      const userCount = await User.aggregate([
-        { $match: searchQuery }, // Match search filter
-        { $count: "totalUsers" } // Count the total number of companies
-      ]);
-  
-      res.status(200).json({
-        user,
-        userCount: userCount.length > 0 ? userCount[0].totalUsers : 0,
-        currentPage: parseInt(page),
-        totalPages: Math.ceil(userCount.length > 0 ? userCount[0].totalUsers / limit : 1)
-      });
-  
-    } catch (error) {
-      res.status(500).json({ message: 'Error fetching users', error });
-    }
-  };
+  try {
+    // Fetch all users and populate company details
+    const users = await User.find().populate('companyId', 'companyName');
+    console.log(users);
+    
+    // Count total users
+    const totalUsers = await User.countDocuments();
+
+    res.status(200).json({
+      users,
+      userCount: totalUsers
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error fetching users", error });
+  }
+};
+
 // Get user by ID
 exports.getUserById = async (req, res) => {
   try {

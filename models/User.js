@@ -3,6 +3,11 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto'); // For generating secure tokens
 
 const userSchema = new mongoose.Schema({
+  companyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company', // Reference to the User model
+    required: true,
+  },
   fullName: {
     type: String,
     trim:true,
@@ -63,6 +68,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+
 }, { timestamps: true });
 
 
