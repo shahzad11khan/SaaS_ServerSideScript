@@ -12,6 +12,7 @@ const router = express.Router();
 router.post('/login',login)
 // Signup 
 router.post('/signup',companyMiddleware,  signup);
+router.post('/userSide/signup',  signup);
 // CRUD routes
 router.get('/users', getUsers);
 router.get('/user/:id', getUserById);
