@@ -125,7 +125,7 @@ exports.updateUser = async (req, res) => {
     if(!findUser) return res.status(404).json({Message:"User Not Exists"})
 
     const existingUser = await User.findOne({ email  });
-    if (existingUser) {
+    if (existingUser._id.toString() !== id) {
         if (existingUser.email === email) {
             return res.status(400).json({ error: 'User with this email already exists' });
           }  
@@ -166,7 +166,7 @@ exports.updateUser = async (req, res) => {
         userLogoPublicId = findUser.userLogoPublicId;
     }
 
-    const user = new User.findByIdAndUpdate(id,{
+    const user = User.findByIdAndUpdate(id,{
       fullName,
       username,
       email,
@@ -190,6 +190,7 @@ exports.updateUser = async (req, res) => {
         user: user,
       });
     } catch (error) {
+      console.log(error)
     res.status(500).json({ error: 'Error updating user' });
   }
 };

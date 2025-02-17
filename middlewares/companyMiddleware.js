@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken";
-import Company from "../models/Company.js";
+const jwt = require("jsonwebtoken");
+const Company = require("../models/Company.js");
 
-export const companyMiddleware = async (req, res, next) => {
+ const companyMiddleware = async (req, res, next) => {
   try {
     console.log("Company Middleware Called");
 
@@ -44,3 +44,4 @@ export const companyMiddleware = async (req, res, next) => {
     return res.status(401).json({ message: "Invalid or expired token." });
   }
 };
+ module.exports = {companyMiddleware}

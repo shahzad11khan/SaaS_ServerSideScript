@@ -18,16 +18,16 @@
 
 // module.exports = authMiddleware;
 
-import jwt from "jsonwebtoken";
-import UserModel from "../models/User.js"; 
+const jwt = require("jsonwebtoken");
+const UserModel = require("../models/User"); 
+
 
 // Middleware to verify token and authorize access
-export const authMiddleware = (allowedRoles = [], allowedPermissions = []) => {
+ const authMiddleware = (allowedRoles = [], allowedPermissions = []) => {
   return async (req, res, next) => {
     try {
       // Get token from headers
       const token = req.header("Authorization")?.split(" ")[1]; // Format: "Bearer <token>"
-
       if (!token) {
         return res.status(401).json({ message: "Access Denied. No token provided." });
       }
@@ -35,10 +35,14 @@ export const authMiddleware = (allowedRoles = [], allowedPermissions = []) => {
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded; // Attach user details to request object
+      console.log(decoded)
 
+      const existingUser = await UserModel.findOne({email: decoded.userEmail  });
+      console.log('byemail ' , existingUser)
+      
       // Fetch user from database to check role & permissions
       const user = await UserModel.findById(decoded.userId);
-      console.log(user)
+      console.log("user", user)
       if (!user) {
         return res.status(401).json({ message: "User not found." });
       }
@@ -69,3 +73,5 @@ export const authMiddleware = (allowedRoles = [], allowedPermissions = []) => {
     }
   };
 };
+
+module.exports = { authMiddleware };

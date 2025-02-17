@@ -5,6 +5,7 @@ const { deleteFromCloudinary } = require('../middlewares/deleteFromCloudinary');
 // Create a new product
 exports.createProduct = async (req, res) => {
   try {
+    console.log(req.body)
     const { productName, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating,barcode } = req.body;
     const productImage = req.files.productImage;
     let productImageUrl = '';

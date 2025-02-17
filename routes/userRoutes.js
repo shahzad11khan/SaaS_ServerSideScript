@@ -16,8 +16,8 @@ router.post('/userSide/signup',  signup);
 // CRUD routes
 router.get('/users', getUsers);
 router.get('/user/:id', getUserById);
-router.put('/user/:id', updateUser);
-router.delete('/user/:id',authMiddleware(["superadmin","admin","manager"]), deleteUser);
+router.put('/update/:id', updateUser);
+router.delete('/delete/:id',authMiddleware(["superadmin","admin","manager"]), deleteUser);
 // rest password
 router.post('/forget-password', generateResetToken);
 router.post('/verifyOTP', verifyOTP);

@@ -103,7 +103,7 @@ exports.createCompany = async (req, res) => {
 exports.updateCompany = async (req, res) => {
   try {
     const { id } = req.params;  
-    const { companyName, registrationNumber, email, address, password, phoneNumber, VatNumber, ownerName, ownerEmail, ownerPhoneNumber, businessLicense, businessType, businessAddress, isActive } = req.body;
+    const { companyName, registrationNumber, email, address, password, confirmPassword, phoneNumber, VatNumber, ownerName, ownerEmail, ownerPhoneNumber, businessLicense, businessType, businessAddress, isActive  } = req.body;
     const file  = req.files.companyLogo
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/;
     let updatedCompanyLogo = null;
@@ -121,8 +121,9 @@ exports.updateCompany = async (req, res) => {
         { ownerEmail: ownerEmail },
       ],
     });
-    
-    if (existingCompany) {
+    console.log(existingCompany , id)
+    if (existingCompany._id.toString() !== id) {
+      console.log('true')
       if (existingCompany.email === email) {
         return res.status(400).json({ error: 'Company with this email already exists' });
       }
@@ -173,7 +174,6 @@ exports.updateCompany = async (req, res) => {
         ownerEmail,
         ownerPhoneNumber,
         businessLicense,
-        taxId,
         businessType,
         businessAddress,
         isActive,
