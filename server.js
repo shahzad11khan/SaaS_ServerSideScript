@@ -13,6 +13,7 @@ const tagManagementRoutes = require('./routes/tagManagementRutes');
 const stockManagementRoutes = require('./routes/stockRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const warehouseRoutes = require('./routes/warehouseRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 const fs = require('fs');
 const path = require('path');
 const fileUpload = require('express-fileupload');
@@ -52,7 +53,9 @@ app.use('/api/permission', permissionRoutes);
 app.use('/api/receive', receivePayRoutes);
 app.use('/v1/api/notification', messagingRoutes);
 app.use('/api/onhand', onhandRoutes);
+app.use('/api/payment', paymentRoutes);
 // server.js
+
 
 // Serve static HTML for testing APIs (optional)
 app.use(express.static(path.join(__dirname, 'public'))); // Serve files from public folder
