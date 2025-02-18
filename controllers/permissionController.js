@@ -77,6 +77,7 @@ const Permissions = require('../models/permissions');
   };
   
   exports.updatePermission = async (req, res) => {
+    console.log("hello")
     try {
       const { id } = req.params;
       const { parentPermission, permissions } = req.body;

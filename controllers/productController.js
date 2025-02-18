@@ -80,7 +80,9 @@ exports.getProductById = async (req, res) => {
 
 // Update a product
 exports.updateProduct = async (req, res) => {
+  console.log('hello123')
   try {
+    const {id} = req.params
     const { productName, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating,
     } = req.body;
     const productImage = req.files.productImage;
@@ -103,7 +105,7 @@ exports.updateProduct = async (req, res) => {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       {
-        productName, userId, userName, role, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating,barcode, productImageUrl: updatedproductImageUrl,
+        productName, userId, userName, role, productDescription, productPrice, productQuantity, productCategory, productSubCategory, productTag, rating, productImageUrl: updatedproductImageUrl,
         productImagePublicId: updatedproductImagePublicId
       },
       { new: true }
@@ -112,6 +114,7 @@ exports.updateProduct = async (req, res) => {
     if (!updatedProduct) return res.status(404).json({ message: 'Product not found' });
     res.status(200).json(updatedProduct);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: 'Error updating product', error });
   }
 };
