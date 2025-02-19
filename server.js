@@ -15,11 +15,12 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const warehouseRoutes = require('./routes/warehouseRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const { getGeminiResponse } = require("./routes/geminiServiceRoute");
+const http = require("http");
+const { Server } = require("socket.io");
 const fs = require('fs');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const cors = require('cors');
-
 const app = express();
 const tempDir = "/tmp/";
 if (!fs.existsSync(tempDir)) {
@@ -32,10 +33,19 @@ app.use(fileUpload({
 }));
 
 // Middleware
+const server = http.createServer(app);
 app.use(express.json());
 app.use(cors({
   origin: '*',  
 }));
+
+// io
+// Set up Socket.IO
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
@@ -81,7 +91,10 @@ app.post("/chat", async (req, res) => {
 });
 // server.js
 
-
+// socket.io
+const handleSockets = require("./services/socketHandler");
+handleSockets(io);
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

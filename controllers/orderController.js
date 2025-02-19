@@ -29,7 +29,9 @@ const createOrder = async (req, res) => {
       orderStatus,
       barcode
     });
-
+// Emit the new order event to all connected clients
+   req.app.get("io").emit("newOrder", order);
+   console.log("New order received:", order);
     await order.save();
     res.status(201).json({ message: 'Order created successfully', order });
   } catch (error) {
