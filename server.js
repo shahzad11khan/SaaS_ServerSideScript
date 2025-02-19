@@ -14,6 +14,7 @@ const stockManagementRoutes = require('./routes/stockRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const warehouseRoutes = require('./routes/warehouseRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const { getGeminiResponse } = require("./routes/geminiServiceRoute");
 const fs = require('fs');
 const path = require('path');
 const fileUpload = require('express-fileupload');
@@ -40,6 +41,16 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Connect to MongoDB
 connectDB();
 
+
+// Serve static HTML for testing APIs (optional)
+app.use(express.static(path.join(__dirname, 'public'))); // Serve files from public folder
+
+// Fallback route for undefined paths to serve index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+
 // API Routes
 app.use('/api/companies', companyRoutes);
 app.use('/api/user', userRoutes);
@@ -54,16 +65,22 @@ app.use('/api/receive', receivePayRoutes);
 app.use('/v1/api/notification', messagingRoutes);
 app.use('/api/onhand', onhandRoutes);
 app.use('/api/payment', paymentRoutes);
+app.post("/chat", async (req, res) => {
+  const { userQuery } = req.body;
+
+  if (!userQuery) {
+    return res.status(400).json({ error: "User query is required" });
+  }
+
+  try {
+    const geminiResponse = await getGeminiResponse(userQuery);
+    res.json({ response: geminiResponse });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred while processing your request" });
+  }
+});
 // server.js
 
-
-// Serve static HTML for testing APIs (optional)
-app.use(express.static(path.join(__dirname, 'public'))); // Serve files from public folder
-
-// Fallback route for undefined paths to serve index.html
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
