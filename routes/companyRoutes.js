@@ -1,6 +1,7 @@
 const express = require('express');
 const companyController = require('../controllers/companyController');
 const multer = require('multer');
+const cacheMiddleware = require('../services/cacheMiddleware');
 
 const router = express.Router();
 
@@ -23,7 +24,7 @@ const storage = multer.diskStorage({
 // router.post('/uploaddata', companyController.createCompany);
 router.post('/create', companyController.createCompany);
 // router.post('/uploaddata', upload, companyController.createCompany);
-router.get('/', companyController.getCompanies);
+router.get('/', cacheMiddleware('companies'),companyController.getCompanies);
 router.put('/update/:id',companyController.updateCompany);
 router.delete('/delete/:id', companyController.deleteCompany);
 router.get('/getSpecificCompany/:id', companyController.getSpecificCompany);

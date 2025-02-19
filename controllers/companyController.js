@@ -2,6 +2,7 @@ const uploadImageToCloudinary = require('../middlewares/cloudinary');
 const { deleteFromCloudinary } = require('../middlewares/deleteFromCloudinary');
 const Company = require('../models/Company');
 const bcrypt = require('bcryptjs');
+const redis = require('../services/redisClient');
 // const fs = require('fs');
 exports.createCompany = async (req, res) => {
   try {
@@ -211,44 +212,65 @@ exports.updateCompany = async (req, res) => {
 //   }
 // };
 
+// using redis
 exports.getCompanies = async (req, res) => {
   try {
-    // Destructure query parameters
-    const { page = 1, limit = 10, sortBy = 'companyName', order = 'asc', search = '' } = req.query;
+    const companies = await Company.find();
+    const companyCount = await Company.countDocuments();
 
-    // Convert sort order to 1 for ASC and -1 for DESC
-    const sortOrder = order === 'desc' ? -1 : 1;
-
-    // Build the query to match search term (if provided)
-    const searchQuery = search
-      ? { $or: [{ email: { $regex: search, $options: 'i' } },{ companyName: { $regex: search, $options: 'i' } }, { registrationNumber: { $regex: search, $options: 'i' } }] }
-      : {}; // Search by company name or registration number
-
-    // Aggregation pipeline
-    const companies = await Company.aggregate([
-      { $match: searchQuery }, // Search filter
-      { $sort: { [sortBy]: sortOrder } }, // Sorting
-      { $skip: (page - 1) * limit }, // Pagination: skip results based on current page
-      { $limit: parseInt(limit) }, // Pagination: limit number of results per page
-    ]);
-
-    // Count total number of companies (without pagination)
-    const companyCount = await Company.aggregate([
-      { $match: searchQuery }, // Match search filter
-      { $count: "totalCompanies" } // Count the total number of companies
-    ]);
-
-    res.status(200).json({
+    const result = {
       companies,
-      companyCount: companyCount.length > 0 ? companyCount[0].totalCompanies : 0,
-      currentPage: parseInt(page),
-      totalPages: Math.ceil(companyCount.length > 0 ? companyCount[0].totalCompanies / limit : 1)
-    });
+      companyCount,
+    };
 
+    // Cache the result for 1 hour
+    await redis.set(res.locals.cacheKey, JSON.stringify(result), 'EX', 3600);
+
+    res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching companies', error });
+    res.status(500).json({ message: "Error fetching companies", error });
   }
 };
+
+
+// exports.getCompanies = async (req, res) => {
+//   try {
+//     // Destructure query parameters
+//     const { page = 1, limit = 10, sortBy = 'companyName', order = 'asc', search = '' } = req.query;
+
+//     // Convert sort order to 1 for ASC and -1 for DESC
+//     const sortOrder = order === 'desc' ? -1 : 1;
+
+//     // Build the query to match search term (if provided)
+//     const searchQuery = search
+//       ? { $or: [{ email: { $regex: search, $options: 'i' } },{ companyName: { $regex: search, $options: 'i' } }, { registrationNumber: { $regex: search, $options: 'i' } }] }
+//       : {}; // Search by company name or registration number
+
+//     // Aggregation pipeline
+//     const companies = await Company.aggregate([
+//       { $match: searchQuery }, // Search filter
+//       { $sort: { [sortBy]: sortOrder } }, // Sorting
+//       { $skip: (page - 1) * limit }, // Pagination: skip results based on current page
+//       { $limit: parseInt(limit) }, // Pagination: limit number of results per page
+//     ]);
+
+//     // Count total number of companies (without pagination)
+//     const companyCount = await Company.aggregate([
+//       { $match: searchQuery }, // Match search filter
+//       { $count: "totalCompanies" } // Count the total number of companies
+//     ]);
+
+//     res.status(200).json({
+//       companies,
+//       companyCount: companyCount.length > 0 ? companyCount[0].totalCompanies : 0,
+//       currentPage: parseInt(page),
+//       totalPages: Math.ceil(companyCount.length > 0 ? companyCount[0].totalCompanies / limit : 1)
+//     });
+
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error fetching companies', error });
+//   }
+// };
 
 
 
