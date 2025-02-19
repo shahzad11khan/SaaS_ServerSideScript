@@ -52,7 +52,7 @@ async function getGeminiResponse(userQuery) {
     const responseText = result.response.text();
 
     // Check if the response is related to e-commerce
-    if (!isEcommerceRelated(responseText)) {
+    if (isEcommerceRelated(responseText)) {
       console.log(responseText);
       return responseText;
     } else {
