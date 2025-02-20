@@ -77,7 +77,7 @@ app.use('/api/onhand', onhandRoutes);
 app.use('/api/payment', paymentRoutes);
 app.post("/chat", async (req, res) => {
   const { data } = req.body;
-
+console.log(data)
   if (!data) {
     return res.status(400).json({ error: "User query is required" });
   }
