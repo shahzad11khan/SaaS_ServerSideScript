@@ -76,14 +76,14 @@ app.use('/v1/api/notification', messagingRoutes);
 app.use('/api/onhand', onhandRoutes);
 app.use('/api/payment', paymentRoutes);
 app.post("/chat", async (req, res) => {
-  const { userQuery } = req.body;
+  const { data } = req.body;
 
-  if (!userQuery) {
+  if (!data) {
     return res.status(400).json({ error: "User query is required" });
   }
 
   try {
-    const geminiResponse = await getGeminiResponse(userQuery);
+    const geminiResponse = await getGeminiResponse(data);
     res.json({ response: geminiResponse });
   } catch (error) {
     res.status(500).json({ error: "An error occurred while processing your request" });
