@@ -46,7 +46,7 @@ async function getGeminiResponse(userQuery) {
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     // Adding instructions to the query
-    const modifiedQuery = `Answer strictly about e-commerce in 3 sentences or less: ${userQuery}`;
+    const modifiedQuery = `Answer strictly about e-commerce in 3 sentences: ${userQuery}`;
 
     const result = await model.generateContent(modifiedQuery);
     const responseText = result.response.text();

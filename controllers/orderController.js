@@ -16,12 +16,9 @@ const createOrder = async (req, res) => {
       totalAmount += product.productPrice * item.quantity;
     }
     const userId = req.user.id;
-    const userName = req.user.username;
-    const role = req.user.role;    // Create the order
+  // Create the order
     const order = new Order({
       userId,
-      userName,
-      role,
       products,
       totalAmount,
       shippingAddress,
