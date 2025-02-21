@@ -3,7 +3,7 @@ const Product = require('../models/Product');
 
 // Create a new order
 const createOrder = async (req, res) => {
-  const {  products, shippingAddress, paymentMethod ,orderStatus,barcode} = req.body;
+  const { products, shippingAddress, paymentMethod, orderStatus, barcode } = req.body;
 
   try {
     // Calculate the total amount
@@ -16,7 +16,7 @@ const createOrder = async (req, res) => {
       totalAmount += product.productPrice * item.quantity;
     }
     const userId = req.user.id;
-  // Create the order
+    // Create the order
     const order = new Order({
       userId,
       products,
@@ -26,9 +26,10 @@ const createOrder = async (req, res) => {
       orderStatus,
       barcode
     });
-// Emit the new order event to all connected clients
-   req.app.get("io").emit("newOrder", order);
-   console.log("New order received:", order);
+    // Emit the new order event to all connected clients
+    // **Emit the new order event to all connected clients**
+    const io = req.app.get("io");  // **Retrieve io instance from app**
+    io.emit("newOrder", order);    // Emit "newOrder" event   console.log("New order received:", order);
     await order.save();
     res.status(201).json({ message: 'Order created successfully', order });
   } catch (error) {
@@ -41,14 +42,14 @@ const createOrder = async (req, res) => {
 const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find()
-    .populate({
-      path: 'userId',
-      select: 'companyId', // Fetch userName and companyId from User model
-      populate: {
-        path: 'companyId',
-        select: 'companyName', // Fetch companyName from Company model
-      },
-    });
+      .populate({
+        path: 'userId',
+        select: 'companyId', // Fetch userName and companyId from User model
+        populate: {
+          path: 'companyId',
+          select: 'companyName', // Fetch companyName from Company model
+        },
+      });
     res.status(200).json(orders);
   } catch (error) {
     console.error('Error fetching orders:', error);

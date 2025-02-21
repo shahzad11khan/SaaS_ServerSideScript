@@ -46,6 +46,8 @@ const io = new Server(server, {
     origin: "*",
   },
 });
+
+app.set("io", io);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
