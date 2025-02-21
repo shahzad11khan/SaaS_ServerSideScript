@@ -127,10 +127,10 @@ const updateOrderStatus = async (req, res) => {
 
 // Delete an order
 const deleteOrder = async (req, res) => {
-  const { orderId } = req.params;
-
+  const { Id } = req.params;
+// console.log(req.params);
   try {
-    const order = await Order.findByIdAndDelete(orderId);
+    const order = await Order.findByIdAndDelete(Id);
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
     }
