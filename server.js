@@ -46,6 +46,8 @@ const io = new Server(server, {
     origin: "*",
   },
 });
+
+app.set("io", io);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Connect to MongoDB
@@ -77,7 +79,7 @@ app.use('/api/onhand', onhandRoutes);
 app.use('/api/payment', paymentRoutes);
 app.post("/chat", async (req, res) => {
   const { data } = req.body;
-
+console.log(data)
   if (!data) {
     return res.status(400).json({ error: "User query is required" });
   }
