@@ -18,8 +18,6 @@ exports.createProduct = async (req, res) => {
       productImageUrl = null;
       productImagePublicId = null;
     }
-    // console.log(req.user)
-    // return;
     const userId = req.user.id;
     const userName = req.user.username;
     const role = req.user.role;

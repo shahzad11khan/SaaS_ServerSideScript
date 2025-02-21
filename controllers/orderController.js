@@ -4,7 +4,7 @@ const Product = require('../models/Product');
 // Create a new order
 const createOrder = async (req, res) => {
   const {  products, shippingAddress, paymentMethod ,orderStatus,barcode} = req.body;
-
+ 
   try {
     // Calculate the total amount
     let totalAmount = 0;

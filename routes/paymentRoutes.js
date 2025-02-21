@@ -9,6 +9,7 @@ const router = express.Router();
 // Create a payment intent
 router.post('/create-payment', async (req, res) => {
   try {
+    console.log('body' , req.body)
     const { amount, currency } = req.body; 
 
     const paymentIntent = await stripe.paymentIntents.create({
