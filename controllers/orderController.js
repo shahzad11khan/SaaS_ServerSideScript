@@ -126,9 +126,8 @@ const updateOrderStatus = async (req, res) => {
 
 // Delete an order
 const deleteOrder = async (req, res) => {
-  consoel.log(req.params)
   const { Id } = req.params;
-  console.log('orderid',Id)
+// console.log(req.params);
   try {
     const order = await Order.findByIdAndDelete(Id);
     if (!order) {
