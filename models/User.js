@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   companyId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company', // Reference to the User model
-    required: true,
+    default: null,
   },
   fullName: {
     type: String,

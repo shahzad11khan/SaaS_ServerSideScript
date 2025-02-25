@@ -1,7 +1,7 @@
 // routes/userRoutes.js
 
 const express = require('express');
-const { signup, getUsers, getUserById, updateUser, deleteUser } = require('../controllers/userController');
+const { signup, getUsers, getUserById, updateUser, deleteUser, userSignup } = require('../controllers/userController');
 const { login } = require('../controllers/authController');
 const { generateResetToken,resetPassword,verifyOTP } = require('../controllers/resetpasswordauthController');
 const {authMiddleware} = require('../middlewares/authMiddleware')
@@ -12,7 +12,7 @@ const router = express.Router();
 router.post('/login',login)
 // Signup 
 router.post('/signup',companyMiddleware,  signup);
-router.post('/userSide/signup',  signup);
+router.post('/user_signup',  userSignup);
 // CRUD routes
 router.get('/users', getUsers);
 router.get('/user/:id', getUserById);

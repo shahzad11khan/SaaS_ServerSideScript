@@ -99,7 +99,6 @@ exports.createCompany = async (req, res) => {
   }
 };
 
-
 // Function to update company details
 exports.updateCompany = async (req, res) => {
   try {
@@ -112,7 +111,7 @@ exports.updateCompany = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const findCompany = await Company.findById(id)
-    if(!findCompany) return res.status(404).json({Message:"Company Not Exists"})
+    if(!findCompany) return res.status(404).json({message:"Company Not Exists"})
 
     const existingCompany = await Company.findOne({
       $or: [
@@ -224,7 +223,8 @@ exports.getCompanies = async (req, res) => {
     };
 
     // Cache the result for 1 hour
-    await redis.set(res.locals.cacheKey, JSON.stringify(result), 'EX', 3600);
+    // await redis.set(res.locals.cacheKey, JSON.stringify(result), 'EX', 3600);
+    await redis.set(res.locals.cacheKey, JSON.stringify(result), 'EX', 600);
 
     res.status(200).json(result);
   } catch (error) {
