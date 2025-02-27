@@ -7,6 +7,8 @@ const { generateResetToken,resetPassword,verifyOTP } = require('../controllers/r
 const {authMiddleware} = require('../middlewares/authMiddleware')
 const {companyMiddleware} = require('../middlewares/companyMiddleware.js')
 const router = express.Router();
+const cacheMiddleware = require('../services/cacheMiddleware');
+
 
 // Login 
 router.post('/login',login)
@@ -14,7 +16,7 @@ router.post('/login',login)
 router.post('/signup',companyMiddleware,  signup);
 router.post('/user_signup',  userSignup);
 // CRUD routes
-router.get('/users', getUsers);
+router.get('/users' , cacheMiddleware('users'), getUsers);
 router.get('/user/:id', getUserById);
 router.put('/update/:id', updateUser);
 router.delete('/delete/:id',authMiddleware(["superadmin","admin","manager"]), deleteUser);

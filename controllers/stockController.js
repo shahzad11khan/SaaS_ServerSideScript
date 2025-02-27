@@ -1,5 +1,7 @@
 // controllers/StockManagementController.js
 const StockManagement = require('../models/Stock');
+const redis = require('../services/redisClient')
+
 
 // Create a new Stock
 exports.createStock = async (req, res) => {
@@ -44,6 +46,7 @@ exports.getAllStock = async (req, res) => {
               select: 'companyName', // Fetch companyName from Company model
             },
           });
+          await redis.set(res.locals.cacheKey, JSON.stringify(Stocks), 'EX', 300);
         res.status(200).json(Stocks);
     } catch (error) {
         console.error('Error fetching Stocks:', error);

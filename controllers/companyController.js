@@ -224,7 +224,7 @@ exports.getCompanies = async (req, res) => {
 
     // Cache the result for 1 hour
     // await redis.set(res.locals.cacheKey, JSON.stringify(result), 'EX', 3600);
-    await redis.set(res.locals.cacheKey, JSON.stringify(result), 'EX', 600);
+    await redis.set(res.locals.cacheKey, JSON.stringify(result), 'EX', 300);
 
     res.status(200).json(result);
   } catch (error) {

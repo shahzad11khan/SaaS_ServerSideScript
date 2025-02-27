@@ -1,4 +1,6 @@
 const Category = require('../models/Category');
+const redis = require('../services/redisClient')
+
 // Add New Category
 exports.addCategory = async (req, res) => {
     try {
@@ -34,6 +36,8 @@ exports.addCategory = async (req, res) => {
           select: 'companyName', // Fetch companyName from Company model
         },
       });
+      await redis.set(res.locals.cacheKey, JSON.stringify(categories), 'EX', 300);
+
       res.status(200).json(categories);
     } catch (error) {
       res.status(500).json({ message: error.message });

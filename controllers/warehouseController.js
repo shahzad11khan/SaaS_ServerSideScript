@@ -1,4 +1,5 @@
 const Warehouse = require('../models/warehouse');
+const redis = require('../services/redisClient')
 
 // Create Warehouse
 exports.createWarehouse = async (req, res) => {
@@ -35,6 +36,7 @@ exports.getWarehouses = async (req, res) => {
         select: 'companyName', // Fetch companyName from Company model
       },
     });
+    await redis.set(res.locals.cacheKey, JSON.stringify(warehouses), 'EX', 300);
     res.status(200).json(warehouses);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching warehouses', error });

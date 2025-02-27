@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 
 // Configure Nodemailer transporter (e.g., for Gmail SMTP)
@@ -18,7 +17,7 @@ transporter.verify((error, success) => {
   if (error) {
     console.error('SMTP Error:', error);
   } else {
-    console.log('SMTP connected:', success);
+    console.log('✅ SMTP connected:', success);
   }
 });
 

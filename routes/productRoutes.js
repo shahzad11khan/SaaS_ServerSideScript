@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const productController = require('../controllers/productController');
 const {authMiddleware} = require('../middlewares/authMiddleware')
+const cacheMiddleware = require('../services/cacheMiddleware');
 
 
 // Define storage and file filter options
@@ -23,7 +24,7 @@ const storage = multer.diskStorage({
 
 // Routes
 router.post('/addproduct',authMiddleware(["superadmin","admin","manager","user"]), productController.createProduct);
-router.get('/', productController.getAllProducts);
+router.get('/', cacheMiddleware('products'), productController.getAllProducts);
 router.get('/:id',authMiddleware(["superadmin","admin","manager","user"]), productController.getProductById);
 router.put('/update/:id',authMiddleware(["superadmin","admin","manager","user"]), productController.updateProduct);
 router.delete('/delete/:id',authMiddleware(["superadmin","admin","manager","user"]), productController.deleteProduct);

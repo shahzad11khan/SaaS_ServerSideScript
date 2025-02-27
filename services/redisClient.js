@@ -14,7 +14,7 @@ const redis = new Redis("rediss://:AUIqAAIjcDE1YzA5YzkwM2EzMmQ0M2U4OThlMzVlMGMyO
 // });
 
 redis.on('connect', () => {
-  console.log('Connected to Redis successfully');
+  console.log('✅ Connected to Redis successfully');
 });
 
 redis.on('error', (err) => {
