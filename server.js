@@ -105,7 +105,6 @@ const express = require("express");
 const connectDB = require("./config/db");
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
-const fs = require("fs");
 const path = require("path");
 const os = require("os");
 const http = require("http");
@@ -142,13 +141,9 @@ app.use(
 
 // ✅ Middleware
 app.use(express.json());
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: '*',  
+}));
 
 // ✅ Serve Static Files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
@@ -171,7 +166,7 @@ app.set("io", io);
 
 // ✅ Handle Sockets (Move Logic to Separate File)
 const handleSockets = require("./services/socketHandler");
-console.log('handle socket is running')
+// console.log('handle socket is running')
 handleSockets(io);
 
 // ✅ API Routes
