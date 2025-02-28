@@ -170,7 +170,7 @@ exports.updateUser = async (req, res) => {
         userLogoUrl = findUser.userLogoUrl;
         userLogoPublicId = findUser.userLogoPublicId;
     }
-
+    const fcmToken = findUser.fcmToken;
     const user = User.findByIdAndUpdate(id,{
       fullName,
       username,
@@ -182,7 +182,8 @@ exports.updateUser = async (req, res) => {
       status,
       role,
       userLogoUrl,
-      userLogoPublicId
+      userLogoPublicId,
+      fcmToken 
     },{
       new : true
     });
