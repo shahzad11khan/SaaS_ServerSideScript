@@ -84,11 +84,36 @@ const express = require('express');
 const router = express.Router();
 const { google } = require('googleapis');
 const axios = require('axios');
+const User = require('../models/User')
 // Firebase Service Account Key
 const key = require('../backend-450304-firebase-adminsdk-fbsvc-7271368357.json');
 
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
+
+router.post('/store-user-fcmToken-&-userId', async (req, res) => {
+  try {
+    const { fcmToken, userId } = req.body;
+
+    if (!fcmToken || !userId) {
+      return res.status(400).json({ error: 'FCM token and user ID are required' });
+    }
+
+    const user = await User.findOne({ _id: userId });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    user.fcmToken = fcmToken;
+    await user.save();
+
+    res.status(200).json({ message: 'FCM token stored successfully' });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: error.message });
+  }
+  })
 // Function to Get Access Token
 async function getAccessToken() {
   return new Promise((resolve, reject) => {
@@ -171,5 +196,7 @@ router.post('/send-notification', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 module.exports = router;
