@@ -77,14 +77,14 @@
 
 // module.exports = router;
 
-
+require("dotenv").config();
 const express = require('express');
 const router = express.Router();
 const { google } = require('googleapis');
 const axios = require('axios');
 const User = require('../models/User')
 // Firebase Service Account Key
-const key = require('../backend-450304-cd0353b1e3f8.json');
+// const key = require('../backend-450304-cd0353b1e3f8.json');
 
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
@@ -116,9 +116,11 @@ router.post('/store-user-fcmToken-&-userId', async (req, res) => {
 async function getAccessToken() {
   return new Promise((resolve, reject) => {
     const jwtClient = new google.auth.JWT(
-      key.client_email,
+      // key.client_email,
+      process.env.FIREBASE_CLIENT_EMAIL,
       null,
-      key.private_key,
+      // key.private_key,
+      process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
       SCOPES
     );
 
@@ -159,7 +161,7 @@ async function sendNotification(deviceToken) {
     };
 
     const response = await axios.post(
-      `https://fcm.googleapis.com/v1/projects/${key.project_id}/messages:send`,
+      `https://fcm.googleapis.com/v1/projects/${process.env.FIREBASE_PROJECT_ID}/messages:send`,
       message,
       {
         headers: {
