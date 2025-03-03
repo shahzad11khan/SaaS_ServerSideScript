@@ -78,6 +78,7 @@
 // });
 
 // module.exports = router;
+const Company = require('../models/Company')
 
 
 const express = require('express');
@@ -86,11 +87,12 @@ const { google } = require('googleapis');
 const axios = require('axios');
 const User = require('../models/User')
 // Firebase Service Account Key
-const key = require('../backend-450304-firebase-adminsdk-fbsvc-7271368357.json');
+const key = require('../crypto-metric-445610-p9-19936b2c5d43.json');
 
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
 
+// API FOR SOTING TOKEN
 router.post('/store-user-fcmToken-&-userId', async (req, res) => {
   try {
     const { fcmToken, userId } = req.body;
@@ -99,10 +101,12 @@ router.post('/store-user-fcmToken-&-userId', async (req, res) => {
       return res.status(400).json({ error: 'FCM token and user ID are required' });
     }
 
-    const user = await User.findOne({ _id: userId });
+    let user = await User.findOne({ _id: userId });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      let isCompany = await Company.findOne({ _id: userId });
+      if(!isCompany) return res.status(400).json({ error: 'company not found' });
+      user = isCompany;
     }
 
     user.fcmToken = fcmToken;
@@ -114,24 +118,28 @@ router.post('/store-user-fcmToken-&-userId', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
   })
+
 // Function to Get Access Token
 async function getAccessToken() {
   return new Promise((resolve, reject) => {
+    // Initialize JWT Client with your service account credentials
     const jwtClient = new google.auth.JWT(
-      key.client_email,
-      null,
-      key.private_key,
-      SCOPES
+      key.client_email,   // The email of the service account
+      null,               // The path to the key file (not needed here, as we're already passing JSON)
+      key.private_key,    // The private key of the service account
+      SCOPES              // The required scopes
     );
 
+    // Use JWT client to authorize and get the token
     jwtClient.authorize((err, tokens) => {
       if (err) {
-        return reject(err);
+        return reject(err); // If authorization fails, reject the promise
       }
-      resolve(tokens.access_token);
+      resolve(tokens.access_token); // Resolve with the access token
     });
   });
 }
+
 
 // Route to Generate Access Token (For Testing)
 router.get('/test', async (req, res) => {
@@ -148,8 +156,9 @@ router.get('/test', async (req, res) => {
 // Function to Send Notification to a Device
 async function sendNotification(deviceToken) {
   try {
+    
     const accessToken = await getAccessToken();
-
+    console.log("accesstoken",accessToken)
     const message = {
       message: {
         token: deviceToken,
@@ -173,7 +182,7 @@ async function sendNotification(deviceToken) {
 
     return response.data;
   } catch (error) {
-    console.error('Error Sending Notification:', error);
+    console.error('Error Sending Notification:');
     throw error;
   }
 }
@@ -196,7 +205,7 @@ router.post('/send-notification', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
+  
 
 
 module.exports = router;
