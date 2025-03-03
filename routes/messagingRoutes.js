@@ -6,7 +6,7 @@
 // const SCOPES = [
 //   'https://www.googleapis.com/auth/firebase.messaging',
 // ]
-// const key = require('../backend-450304-firebase-adminsdk-fbsvc-7271368357.json');
+// const key = require('../backend-450304-cd0353b1e3f8.json');
 //   function getAccessToken() {
 //     return new Promise(function(resolve, reject) {
 //       const jwtClient = new google.auth.JWT(
@@ -26,8 +26,8 @@
 //       });
 //     });
 //   };
-// router.get('/test', (req, res) => {
-//  const token = getAccessToken();
+// router.get('/test',async (req, res) => {
+//  const token = await getAccessToken();
 //  console.log(token)
 //  res.status(200).json({ message: 'generate token' ,toke: token});
 // })
@@ -35,7 +35,6 @@
 
 // const sendNotification = async (deviceToken) => {
 //   const accessToken = await getAccessToken();
-
 //   const message = {
 //     message: {
 //       token: deviceToken,
@@ -59,17 +58,16 @@
 // };
 
 // router.post('/send-notification', async (req, res) => {
-// // console.log(fcmToken, title, body
 //   try {
-// //    const sendMessage = await firebase.messaging().send( {
-// //     token: req.body.fcmToken,
-// //     notification: {
-// //         title: req.body.title,
-// //         body: req.body.body,
-// //     },
-// // });
-// //    console.log(`SendMessage: ${sendMessage}`)
-// const messageresult = sendNotification()
+//     const sendMessage = await firebase.messaging().send( {
+//       fcmToken: req.body.fcmToken,
+//       notification: {
+//         title: req.body.title,
+//         body: req.body.body,
+//       },
+//     });
+//    console.log(`SendMessage: ${sendMessage}`)
+// const messageresult = await sendNotification();
 // console.log(messageresult)
 //     res.status(200).json({ message: 'Notification sent successfully' });
 //   } catch (error) {
@@ -87,7 +85,7 @@ const { google } = require('googleapis');
 const axios = require('axios');
 const User = require('../models/User')
 // Firebase Service Account Key
-const key = require('../crypto-metric-445610-p9-19936b2c5d43.json');
+const key = require('../backend-450304-cd0353b1e3f8.json');
 
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
