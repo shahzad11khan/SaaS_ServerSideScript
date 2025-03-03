@@ -120,7 +120,7 @@ async function getAccessToken() {
       process.env.FIREBASE_CLIENT_EMAIL,
       null,
       // key.private_key,
-      process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
       SCOPES
     );
 
