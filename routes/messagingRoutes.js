@@ -77,7 +77,6 @@
 
 // module.exports = router;
 const Company = require('../models/Company')
-
 require("dotenv").config();
 const express = require('express');
 const router = express.Router();
@@ -115,16 +114,18 @@ router.post('/store-user-fcmToken-&-userId', async (req, res) => {
     console.error('Error:', error);
     res.status(500).json({ error: error.message });
   }
-  })
+})
 
 // Function to Get Access Token
 async function getAccessToken() {
   return new Promise((resolve, reject) => {
     // Initialize JWT Client with your service account credentials
-    const jwtClient = new google.auth.JWT(
-      key.client_email,
+    const jwtClient =  new google.auth.JWT(
+      // key.client_email,
+      process.env.firebase_client_email,
       null,
-      key.private_key,
+      // key.private_key,
+      process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
       SCOPES
     );
 
@@ -137,7 +138,6 @@ async function getAccessToken() {
     });
   });
 }
-
 
 // Route to Generate Access Token (For Testing)
 router.get('/test', async (req, res) => {
@@ -152,17 +152,16 @@ router.get('/test', async (req, res) => {
 });
 
 // Function to Send Notification to a Device
-async function sendNotification(deviceToken) {
+async function sendNotification(deviceToken , notificationTitle , notificationBody) {
   try {
     
     const accessToken = await getAccessToken();
-    console.log("accesstoken",accessToken)
     const message = {
       message: {
         token: deviceToken,
         notification: {
-          title: 'Test Notification',
-          body: 'This is a test notification from FCM v1!',
+          title: notificationTitle,
+          body: notificationBody,
         },
       },
     };
@@ -188,13 +187,17 @@ async function sendNotification(deviceToken) {
 // Route to Send Notification
 router.post('/send-notification', async (req, res) => {
   try {
-    const { fcmToken } = req.body;
+    const { fcmToken , title , body } = req.body;
+
+    if(!title && !body){
+      return res.status(400).json({ error: 'title or body is not fill correctly' });
+    }
 
     if (!fcmToken) {
       return res.status(400).json({ error: 'FCM token is required' });
     }
 
-    const messageResult = await sendNotification(fcmToken);
+    const messageResult = await sendNotification(fcmToken , title , body);
     console.log('Notification Response:', messageResult);
 
     res.status(200).json({ message: 'Notification sent successfully', result: messageResult });
@@ -204,6 +207,80 @@ router.post('/send-notification', async (req, res) => {
   }
 });
   
+// Function to Send Notifications to All Users
+async function sendNotificationToAll(tokens, title, body) {
+  try {
+    if (!tokens.length) throw new Error("No FCM tokens found");
 
+    const accessToken = await getAccessToken();
+    const projectId = process.env.FIREBASE_PROJECT_ID?.trim();
+    const url = `https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`;
+
+    const message = {
+      notification: { title, body },
+      android: { priority: "high", ttl: "0s" },
+      apns: { headers: { "apns-priority": "10" } },
+      webpush: { headers: { Urgency: "high" } },
+    };
+
+    const responses = await Promise.all(
+      tokens.map((token) =>
+        axios.post(
+          url,
+          { message: { ...message, token } },
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+      )
+    );
+
+    return responses.map((res) => res.data);
+  } catch (error) {
+    console.error("Error Sending Notifications:", error.response?.data.error.details || error.message);
+    throw error;
+  }
+}
+
+// API to Send Notification to All Users
+router.post("/send-notification-to-all-users", async (req, res) => {
+  try {
+    const { title, body } = req.body;
+    if (!title || !body) return res.status(400).json({ error: "Title and body are required" });
+
+    const users = await User.find({}, "fcmToken");
+    // console.log(users)
+    const fcmTokens = users.map((user) => user.fcmToken).filter(Boolean);
+    // console.log("fcmTokens",fcmTokens)
+    if (!fcmTokens.length) return res.status(400).json({ error: "No FCM tokens found" });
+
+    const messageResults = await sendNotificationToAll(fcmTokens, title, body);
+    res.status(200).json({ message: "Notification sent to all users", results: messageResults });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// API to Send Notification to All Company
+router.post("/send-notification-to-all-companies", async (req, res) => {
+  try {
+    const { title, body } = req.body;
+    if (!title || !body) return res.status(400).json({ error: "Title and body are required" });
+
+    const companies = await Company.find({}, "fcmToken");
+    // console.log(companies)
+    const fcmTokens = companies.map((companie) => companie.fcmToken).filter(Boolean);
+    // console.log("fcmTokens",fcmTokens)
+    if (!fcmTokens.length) return res.status(400).json({ error: "No FCM tokens found" });
+
+    const messageResults = await sendNotificationToAll(fcmTokens, title, body);
+    res.status(200).json({ message: "Notification sent to all users", results: messageResults });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 module.exports = router;
