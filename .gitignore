@@ -45,7 +45,8 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-
+backend-450304-dc32184fdb02.json
+backend-450304-cd0353b1e3f8.json
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 

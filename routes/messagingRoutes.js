@@ -78,14 +78,14 @@
 // module.exports = router;
 const Company = require('../models/Company')
 
-
+require("dotenv").config();
 const express = require('express');
 const router = express.Router();
 const { google } = require('googleapis');
 const axios = require('axios');
 const User = require('../models/User')
 // Firebase Service Account Key
-const key = require('../backend-450304-cd0353b1e3f8.json');
+// const key = require('../backend-450304-cd0353b1e3f8.json');
 
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
@@ -122,10 +122,10 @@ async function getAccessToken() {
   return new Promise((resolve, reject) => {
     // Initialize JWT Client with your service account credentials
     const jwtClient = new google.auth.JWT(
-      key.client_email,   // The email of the service account
-      null,               // The path to the key file (not needed here, as we're already passing JSON)
-      key.private_key,    // The private key of the service account
-      SCOPES              // The required scopes
+      key.client_email,
+      null,
+      key.private_key,
+      SCOPES
     );
 
     // Use JWT client to authorize and get the token
@@ -168,7 +168,7 @@ async function sendNotification(deviceToken) {
     };
 
     const response = await axios.post(
-      `https://fcm.googleapis.com/v1/projects/${key.project_id}/messages:send`,
+      `https://fcm.googleapis.com/v1/projects/${process.env.FIREBASE_PROJECT_ID}/messages:send`,
       message,
       {
         headers: {
