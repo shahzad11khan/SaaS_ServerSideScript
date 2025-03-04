@@ -143,3 +143,4 @@ dist
 .svelte-kit
 
 # End of https://www.toptal.com/developers/gitignore/api/node
+.backend-450304-cd0353b1e3f8.json
