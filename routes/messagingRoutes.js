@@ -272,7 +272,7 @@ router.post("/send-notification-to-all-companies", async (req, res) => {
 
     const companies = await Company.find({}, "fcmToken");
     // console.log(companies)
-    const fcmTokens = companies.map((companie) => companie.fcmToken).filter(Boolean);
+    const fcmTokens = companies.map((company) => company.fcmToken).filter(Boolean);
     // console.log("fcmTokens",fcmTokens)
     if (!fcmTokens.length) return res.status(400).json({ error: "No FCM tokens found" });
 
