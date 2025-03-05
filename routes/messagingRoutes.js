@@ -45,7 +45,7 @@ async function getAccessToken() {
     // Initialize JWT Client with your service account credentials
     const jwtClient =  new google.auth.JWT(
       // key.client_email,
-      process.env.firebase_client_email,
+      process.env.FIREBASE_CLIENT_EMAIL,
       null,
       // key.private_key,
       process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
