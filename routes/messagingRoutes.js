@@ -84,7 +84,7 @@ const { google } = require('googleapis');
 const axios = require('axios');
 const User = require('../models/User')
 // Firebase Service Account Key
-// const key = require('../backend-450304-cd0353b1e3f8.json');
+// const key = require('../backend-450304-dc32184fdb02.json');
 
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
