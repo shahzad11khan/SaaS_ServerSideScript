@@ -1,4 +1,81 @@
+// const express = require('express');
+// const router = express.Router();
+// const { firebase } = require('../firebase');
+// const { google } = require('googleapis');
 
+// const SCOPES = [
+//   'https://www.googleapis.com/auth/firebase.messaging',
+// ]
+// const key = require('../backend-450304-cd0353b1e3f8.json');
+//   function getAccessToken() {
+//     return new Promise(function(resolve, reject) {
+//       const jwtClient = new google.auth.JWT(
+//         key.client_email,
+//         null,
+//         key.private_key,
+//         SCOPES,
+//         null
+//       );
+//       console.log(jwtClient);
+//       jwtClient.authorize(function(err, tokens) {
+//         if (err) {
+//           reject(err);
+//           return;
+//         }
+//         resolve(tokens.access_token);
+//       });
+//     });
+//   };
+// router.get('/test',async (req, res) => {
+//  const token = await getAccessToken();
+//  console.log(token)
+//  res.status(200).json({ message: 'generate token' ,toke: token});
+// })
+// // Send Notification Directly Without Storing Token
+
+// const sendNotification = async (deviceToken) => {
+//   const accessToken = await getAccessToken();
+//   const message = {
+//     message: {
+//       token: deviceToken,
+//       notification: {
+//         title: "Hello from FCM v1!",
+//         body: "This is a test notification"
+//       }
+//     }
+//   };
+
+//   const response = await fetch(`https://fcm.googleapis.com/v1/projects/${key.project_id}/messages:send`, {
+//     method: "POST",
+//     headers: {
+//       "Authorization": `Bearer ${accessToken}`,
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify(message)
+//   });
+
+//   return response.json();
+// };
+
+// router.post('/send-notification', async (req, res) => {
+//   try {
+//     const sendMessage = await firebase.messaging().send( {
+//       fcmToken: req.body.fcmToken,
+//       notification: {
+//         title: req.body.title,
+//         body: req.body.body,
+//       },
+//     });
+//    console.log(`SendMessage: ${sendMessage}`)
+// const messageresult = await sendNotification();
+// console.log(messageresult)
+//     res.status(200).json({ message: 'Notification sent successfully' });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
+// module.exports = router;
 const Company = require('../models/Company')
 require("dotenv").config();
 const express = require('express');
@@ -40,12 +117,13 @@ router.post('/store-user-fcmToken-&-userId', async (req, res) => {
 })
 
 // Function to Get Access Token
+console.log( process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),)
 async function getAccessToken() {
   return new Promise((resolve, reject) => {
     // Initialize JWT Client with your service account credentials
     const jwtClient =  new google.auth.JWT(
       // key.client_email,
-      process.env.FIREBASE_CLIENT_EMAIL,
+      process.env.firebase_client_email,
       null,
       // key.private_key,
       process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
