@@ -43,11 +43,14 @@ const getAllOrders = async (req, res) => {
     const orders = await Order.find()
       .populate({
         path: 'userId',
-        select: 'companyId', // Fetch userName and companyId from User model
+        select: 'username companyId', // Fetch userName and companyId from User model
         populate: {
           path: 'companyId',
           select: 'companyName', // Fetch companyName from Company model
         },
+      }).populate({
+        path: "products.productId", // Populate productId inside products array
+        select: "productName", // Fetch only the product name
       });
     res.status(200).json(orders);
   } catch (error) {
