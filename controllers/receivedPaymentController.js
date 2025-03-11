@@ -20,7 +20,7 @@ exports.getReceivedPayments = async (req, res) => {
       total,
       currentPage: parseInt(page),
       totalPages: Math.ceil(total / limit),
-    }), 'EX', 300);
+    }), 'EX', 30);
 
     res.status(200).json({
       receivedPayments,

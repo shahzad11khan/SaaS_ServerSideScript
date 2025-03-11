@@ -1,6 +1,11 @@
-const firebase = require('firebase-admin');
+const admin = require('firebase-admin');
 
-const serviceAccount = require("./backend-450304-firebase-adminsdk-fbsvc-7271368357.json");
+const serviceAccount = {
+    type: process.env.FIREBASE_TYPE,
+    project_id: process.env.FIREBASE_PROJECT_ID,
+    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // 🔥 Fix line breaks
+    client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  };
 
 // admin.initializeApp({
 //   credential: admin.credential.cert(serviceAccount),
@@ -9,8 +14,8 @@ const serviceAccount = require("./backend-450304-firebase-adminsdk-fbsvc-7271368
 // module.exports = admin;
 
 
-firebase.initializeApp({
-    credential: firebase.credential.cert(serviceAccount),
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
 })
 
 // // Initialize APNS
@@ -24,4 +29,4 @@ firebase.initializeApp({
 //   });
   
 
-module.exports = { firebase }
+module.exports = admin; 

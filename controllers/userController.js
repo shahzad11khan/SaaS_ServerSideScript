@@ -90,7 +90,7 @@ exports.getUsers = async (req, res) => {
     await redis.set(res.locals.cacheKey, JSON.stringify({
       users,
       userCount: totalUsers
-    }), 'EX', 300);
+    }), 'EX', 30);
 
     res.status(200).json({
       users,
