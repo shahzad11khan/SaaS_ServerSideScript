@@ -60,7 +60,7 @@ exports.getAllProducts = async (req, res) => {
         },
       });
 
-      await redis.set(res.locals.cacheKey, JSON.stringify(products), 'EX', 300);
+      await redis.set(res.locals.cacheKey, JSON.stringify(products), 'EX', 30);
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching products', error });

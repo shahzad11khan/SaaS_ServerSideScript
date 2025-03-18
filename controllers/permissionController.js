@@ -61,7 +61,7 @@ const redis = require('../services/redisClient')
         permissionCount: permissionCount.length > 0 ? permissionCount[0].totalPermissions : 0,
         currentPage: parseInt(page),
         totalPages: Math.ceil(permissionCount.length > 0 ? permissionCount[0].totalPermissions / limit : 1)
-      }), 'EX', 300);
+      }), 'EX', 30);
 
       res.status(200).json({
         permission,

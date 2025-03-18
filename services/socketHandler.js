@@ -17,6 +17,11 @@ module.exports = (io) => {
   io.on("connection", (socket) => {
     console.log("🔵 A client connected:", socket.id);
 
+    socket.on("joinUser", (userId) => {
+      socket.join(userId); // User joins their own room
+      console.log(`👤 User ${userId} joined their room`);
+    });
+
     socket.on("newOrder", (order) => {
       console.log("🛒 New order received:", order);
       io.emit("orderUpdate", order);

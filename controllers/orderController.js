@@ -120,6 +120,12 @@ const updateOrderStatus = async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
+    if(orderStatus !== 'pending'){
+      const io = req.app.get("io");  // **Retrieve io instance from app**
+      const userId = order.userId.toString(); // Ensure it's a string
+      io.to(userId).emit("orderStatus", orderStatus); // 🔥 Send only to the user
+    }
+
     res.status(200).json({ message: 'Order status updated successfully', order });
   } catch (error) {
     console.error('Error updating order status:', error);

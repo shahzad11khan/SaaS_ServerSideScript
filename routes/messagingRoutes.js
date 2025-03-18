@@ -83,13 +83,19 @@ const router = express.Router();
 const { google } = require('googleapis');
 const axios = require('axios');
 const User = require('../models/User')
+const admin = require("../firebase");
+
 // Firebase Service Account Key
+<<<<<<< HEAD
 // const key = require('../backend-450304-dc32184fdb02.json');
 
+=======
+// const key = require('../backend-450304-cd0353b1e3f8.json');
+>>>>>>> 5775e9771bfb12f748ab9e42579f239350dac85f
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
 
-// API FOR SOTING TOKEN
+// API FOR STORING TOKEN
 router.post('/store-user-fcmToken-&-userId', async (req, res) => {
   try {
     const { fcmToken, userId } = req.body;
@@ -283,5 +289,16 @@ router.post("/send-notification-to-all-companies", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+router.post("/subscribe" , async(req,res)=>{
+  const { token, topic } = req.body;
+  try {
+    await admin.messaging().subscribeToTopic(token, topic);
+    res.status(200).send({ message: `Subscribed to ${topic}` });
+  } catch (error) {
+    console.log(error)
+    res.status(500).send({ error: error.message });
+  }
+})
 
 module.exports = router;

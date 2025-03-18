@@ -36,7 +36,7 @@ exports.getWarehouses = async (req, res) => {
         select: 'companyName', // Fetch companyName from Company model
       },
     });
-    await redis.set(res.locals.cacheKey, JSON.stringify(warehouses), 'EX', 300);
+    await redis.set(res.locals.cacheKey, JSON.stringify(warehouses), 'EX', 30);
     res.status(200).json(warehouses);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching warehouses', error });
