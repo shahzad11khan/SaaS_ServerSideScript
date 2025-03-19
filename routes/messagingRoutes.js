@@ -86,12 +86,7 @@ const User = require('../models/User')
 const admin = require("../firebase");
 
 // Firebase Service Account Key
-<<<<<<< HEAD
-// const key = require('../backend-450304-dc32184fdb02.json');
-
-=======
 // const key = require('../backend-450304-cd0353b1e3f8.json');
->>>>>>> 5775e9771bfb12f748ab9e42579f239350dac85f
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
 
