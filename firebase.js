@@ -7,8 +7,15 @@ const serviceAccount = {
     client_email: process.env.FIREBASE_CLIENT_EMAIL,
   };
 
-firebase.initializeApp({
-    credential: firebase.credential.cert(serviceAccount),
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+// });
+
+// module.exports = admin;
+
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
 })
 
 
