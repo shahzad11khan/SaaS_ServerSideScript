@@ -86,7 +86,8 @@ const User = require('../models/User')
 const admin = require("../firebase");
 
 // Firebase Service Account Key
-// const key = require('../backend-450304-cd0353b1e3f8.json');
+// const key = require('../backend-450304-dc32184fdb02.json');
+
 const SCOPES = ['https://www.googleapis.com/auth/firebase.messaging'];
 
 
@@ -118,6 +119,7 @@ router.post('/store-user-fcmToken-&-userId', async (req, res) => {
 })
 
 // Function to Get Access Token
+console.log( process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),)
 async function getAccessToken() {
   return new Promise((resolve, reject) => {
     // Initialize JWT Client with your service account credentials
@@ -273,7 +275,7 @@ router.post("/send-notification-to-all-companies", async (req, res) => {
 
     const companies = await Company.find({}, "fcmToken");
     // console.log(companies)
-    const fcmTokens = companies.map((companie) => companie.fcmToken).filter(Boolean);
+    const fcmTokens = companies.map((company) => company.fcmToken).filter(Boolean);
     // console.log("fcmTokens",fcmTokens)
     if (!fcmTokens.length) return res.status(400).json({ error: "No FCM tokens found" });
 

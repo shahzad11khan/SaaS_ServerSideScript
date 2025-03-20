@@ -91,7 +91,7 @@
         const token = await getToken(messaging, { vapidKey: "BOXKKIurvZdRzxPnSik7saJXYY1q1vzpVrfQiW0g8FM2QwBula2y0WGNtsttbZ0Guv8lfoQeWZAu1InVIO5HbLw" });
         console.log("📲 FCM Token:", token);
         document.getElementById("token").innerText = `Token: ${token}`;
-        await fetch("http://localhost:5000/v1/api/notification/send-notification", {
+        await fetch("https://saasserversidescript-production-162a.up.railway.app/v1/api/notification/send-notification", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
